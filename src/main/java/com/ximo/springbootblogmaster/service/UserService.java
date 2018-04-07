@@ -26,5 +26,8 @@ public interface UserService {
     /** 根据用户名模糊查询 */
     Page<User> listUserByNameLike(String name, Pageable pageable);
 
+    /** 根据用户名包含查询*/
+    Page<User> listUserByNameContaining(String name, Pageable pageable);
+
 
 }

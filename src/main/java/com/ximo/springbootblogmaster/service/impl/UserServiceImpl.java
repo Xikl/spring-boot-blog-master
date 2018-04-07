@@ -51,4 +51,9 @@ public class UserServiceImpl implements UserService {
     public Page<User> listUserByNameLike(String name, Pageable pageable) {
         return userRepository.findByUsernameLike(LIKE.concat(name).concat(LIKE), pageable);
     }
+
+    @Override
+    public Page<User> listUserByNameContaining(String name, Pageable pageable) {
+        return userRepository.findByUsernameContaining(name, pageable);
+    }
 }
