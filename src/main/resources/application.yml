@@ -1,0 +1,15 @@
+spring:
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog?characterEncoding=utf-8&uesSSL=false
+    username: root
+    password: zwz520
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    # 打印sql语句
+    show-sql: true
+    open-in-view: false
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8

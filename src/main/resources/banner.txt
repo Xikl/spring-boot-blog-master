@@ -1,0 +1,14 @@
+${AnsiColor.BRIGHT_YELLOW}
+    ,----,         .---.       ,----,
+     .'   .`|        /. ./|     .'   .`|
+  .'   .'  .'     .-'-. ' |  .'   .'  .'
+,---, '   ./     /___/ \: |,---, '   ./
+;   | .'  /   .-'.. '   ' .;   | .'  /
+`---' /  ;--,/___/ \:     '`---' /  ;--,
+  /  /  / .`|.   \  ' .\     /  /  / .`|
+./__;     .'  \   \   ' \ |./__;     .'
+;   |  .'      \   \  |--" ;   |  .'
+`---'           \   \ |    `---'
+                 '---"
+${AnsiColor.BRIGHT_CYAN}
+::: Project (version:${application.version}) :::      Fighting     Spring-Boot ${spring-boot.version}
