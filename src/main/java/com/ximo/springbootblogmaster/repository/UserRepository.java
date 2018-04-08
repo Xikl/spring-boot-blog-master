@@ -5,34 +5,38 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.awt.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author 朱文赵
- * @date 2018/4/7
- * @description
+ * @date 2018/4/8
+ * @description 用户仓库.
  */
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    /** 通过姓名查找 */
+    /**
+     * 根据用户名分页查询用户列表
+     *
+     * @param name
+     * @param pageable
+     * @return
+     */
+    Page<User> findByNameLike(String name, Pageable pageable);
+
+    /**
+     * 根据名称查询
+     *
+     * @param username
+     * @return
+     */
     User findByUsername(String username);
 
     /**
-     * 通过模糊查询查询user
+     * 根据名称列表查询
      *
-     * @param username 用户名
-     * @param pageable 分页对象
+     * @param usernames
      * @return
      */
-    Page<User> findByUsernameLike(String username, Pageable pageable);
-
-    /**
-     * 通过用户名匹配查询
-     *
-     * @param username 用户名
-     * @param pageable 分页对象
-     * @return
-     */
-    Page<User> findByUsernameContaining(String username, Pageable pageable);
-
+    List<User> findByUsernameIn(Collection<String> usernames);
 }

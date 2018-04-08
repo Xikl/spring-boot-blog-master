@@ -4,56 +4,78 @@ import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.repository.UserRepository;
 import com.ximo.springbootblogmaster.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import static com.ximo.springbootblogmaster.constant.CommonConstant.LIKE;
+import javax.transaction.Transactional;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author 朱文赵
- * @date 2018/4/7
- * @description 用户服务实现类
+ * @date 2018/4/8
+ * @description user服务.
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackOn = Exception.class)
     @Override
-    public User saveOrUpdateUser(User user) {
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public User registerUser(User user) {
-        return userRepository.save(user);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public void removeUser(Long id) {
         userRepository.deleteById(id);
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
-    public User getByUserId(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public void removeUsersInBatch(List<User> users) {
+        userRepository.deleteInBatch(users);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
-    public Page<User> listUserByNameLike(String name, Pageable pageable) {
-        return userRepository.findByUsernameLike(LIKE.concat(name).concat(LIKE), pageable);
+    public User getUserById(Long id) {
+        return userRepository.getOne(id);
     }
 
     @Override
-    public Page<User> listUserByNameContaining(String name, Pageable pageable) {
-        return userRepository.findByUsernameContaining(name, pageable);
+    public List<User> listUsers() {
+        return userRepository.findAll();
     }
+
+    @Override
+    public Page<User> listUsersByNameLike(String name, Pageable pageable) {
+        // 模糊查询
+        name = "%" + name + "%";
+        Page<User> users = userRepository.findByNameLike(name, pageable);
+        return users;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<User> listUsersByUsernames(Collection<String> usernames) {
+        return userRepository.findByUsernameIn(usernames);
+    }
+
 }
