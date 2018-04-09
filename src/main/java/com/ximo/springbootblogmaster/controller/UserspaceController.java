@@ -10,6 +10,7 @@ import com.ximo.springbootblogmaster.service.UserService;
 import com.ximo.springbootblogmaster.util.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/u")
 public class UserspaceController {
+
+    @Qualifier("userServiceImpl")
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -145,15 +148,15 @@ public class UserspaceController {
 
         if (catalogId != null && catalogId > 0) { // 分类查询
             Catalog catalog = catalogService.getCatalogById(catalogId);
-            Pageable pageable = new PageRequest(pageIndex, pageSize);
+            Pageable pageable = PageRequest.of(pageIndex, pageSize);
             page = blogService.listBlogsByCatalog(catalog, pageable);
             order = "";
-        } else if (order.equals("hot")) { // 最热查询
+        } else if ("hot".equals(order)) { // 最热查询
             Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize");
-            Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+            Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
             page = blogService.listBlogsByTitleVoteAndSort(user, keyword, pageable);
-        } else if (order.equals("new")) { // 最新查询
-            Pageable pageable = new PageRequest(pageIndex, pageSize);
+        } else if ("new".equals(order)) { // 最新查询
+            Pageable pageable = PageRequest.of(pageIndex, pageSize);
             page = blogService.listBlogsByTitleVote(user, keyword, pageable);
         }
 
@@ -166,7 +169,7 @@ public class UserspaceController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);
         model.addAttribute("blogList", list);
-        return (async == true ? "/userspace/u :: #mainContainerRepleace" : "/userspace/u");
+        return (async ? "/userspace/u :: #mainContainerRepleace" : "/userspace/u");
     }
 
     /**
@@ -187,7 +190,7 @@ public class UserspaceController {
         // 判断操作用户是否是博客的所有者
         boolean isBlogOwner = false;
         if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+                && !"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
             principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principal != null && username.equals(principal.getUsername())) {
                 isBlogOwner = true;

@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -14,10 +15,10 @@ import java.sql.Timestamp;
 /**
  * @author 朱文赵
  * @date 2018/4/8
- * @description es博客.
+ * @description es博客.  MediaType 转为 XML
  */
 @Document(indexName = "blog", type = "blog")
-@XmlRootElement // MediaType 转为 XML
+@XmlRootElement
 @Data
 public class EsBlog implements Serializable {
  
@@ -26,9 +27,11 @@ public class EsBlog implements Serializable {
 
 	/** 主键id*/
 	@Id
-	private String id;  
+	private String id;
+
+	/** 博客id*/
 	@Field(index = false)
-	private Long blogId; // Blog 的 id
+	private Long blogId;
  
 	private String title;
  
@@ -36,22 +39,29 @@ public class EsBlog implements Serializable {
  
 	private String content;
  
-	@Field(index = false)  // 不做全文检索字段
+	@Field(index = false)
 	private String username;
-	@Field(index = false)  // 不做全文检索字段
+	@Field(index = false)
 	private String avatar;
-	@Field(index = false)  // 不做全文检索字段
+	@Field(index = false)
 	private Timestamp createTime;
-	@Field(index = false)  // 不做全文检索字段
-	private Integer readSize = 0; // 访问量、阅读量
-	@Field(index = false)  // 不做全文检索字段
-	private Integer commentSize = 0;  // 评论量
-	@Field(index = false)  // 不做全文检索字段
-	private Integer voteSize = 0;  // 点赞量
- 
-	private String tags;  // 标签
 
-	protected EsBlog() {  // JPA 的规范要求无参构造函数；设为 protected 防止直接使用 
+	/** 访问量、阅读量*/
+	@Field(index = false)
+	private Integer readSize = 0;
+	/** 评论量*/
+	@Field(index = false)
+	private Integer commentSize = 0;
+
+	/** 点赞量 */
+	@Field(index = false)
+	private Integer voteSize = 0;
+
+	/** 标签*/
+	private String tags;
+
+	/** JPA 的规范要求无参构造函数；设为 protected 防止直接使用  */
+	protected EsBlog() {
 	}
 
 	public EsBlog(String title, String content) {

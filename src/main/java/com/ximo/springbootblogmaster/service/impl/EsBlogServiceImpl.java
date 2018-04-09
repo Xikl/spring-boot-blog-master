@@ -48,7 +48,7 @@ public class EsBlogServiceImpl implements EsBlogService {
     @Autowired
     private UserService userService;
 
-    private static final Pageable TOP_5_PAGEABLE = new PageRequest(0, 5);
+    private static final Pageable TOP_5_PAGEABLE = PageRequest.of(0, 5);
     private static final String EMPTY_KEYWORD = "";
 
     /**
@@ -88,7 +88,7 @@ public class EsBlogServiceImpl implements EsBlogService {
         Page<EsBlog> pages = null;
         Sort sort = new Sort(Direction.DESC, "createTime");
         if (pageable.getSort() == null) {
-            pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         }
 
         pages = esBlogRepository.findDistinctEsBlogByTitleContainingOrSummaryContainingOrContentContainingOrTagsContaining(keyword, keyword, keyword, keyword, pageable);
@@ -107,7 +107,7 @@ public class EsBlogServiceImpl implements EsBlogService {
 
         Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
         if (pageable.getSort() == null) {
-            pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         }
 
         return esBlogRepository.findDistinctEsBlogByTitleContainingOrSummaryContainingOrContentContainingOrTagsContaining(keyword, keyword, keyword, keyword, pageable);
@@ -155,12 +155,7 @@ public class EsBlogServiceImpl implements EsBlogService {
                 .addAggregation(terms("tags").field("tags").order(Terms.Order.count(false)).size(30))
                 .build();
         // when
-        Aggregations aggregations = elasticsearchTemplate.query(searchQuery, new ResultsExtractor<Aggregations>() {
-            @Override
-            public Aggregations extract(SearchResponse response) {
-                return response.getAggregations();
-            }
-        });
+        Aggregations aggregations = elasticsearchTemplate.query(searchQuery, SearchResponse::getAggregations);
 
         StringTerms modelTerms = (StringTerms) aggregations.asMap().get("tags");
 

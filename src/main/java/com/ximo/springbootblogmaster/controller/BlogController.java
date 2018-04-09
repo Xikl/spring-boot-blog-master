@@ -45,17 +45,17 @@ public class BlogController {
         try {
             if (order.equals("hot")) { // 最热查询
                 Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
-                Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+                Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
                 page = esBlogService.listHotestEsBlogs(keyword, pageable);
             } else if (order.equals("new")) { // 最新查询
                 Sort sort = new Sort(Direction.DESC, "createTime");
-                Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+                Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
                 page = esBlogService.listNewestEsBlogs(keyword, pageable);
             }
 
             isEmpty = false;
         } catch (Exception e) {
-            Pageable pageable = new PageRequest(pageIndex, pageSize);
+            Pageable pageable = PageRequest.of(pageIndex, pageSize);
             page = esBlogService.listEsBlogs(pageable);
         }
 

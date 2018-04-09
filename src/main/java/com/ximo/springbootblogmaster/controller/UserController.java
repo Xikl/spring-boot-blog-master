@@ -52,13 +52,14 @@ public class UserController {
                              @RequestParam(value = "name", required = false, defaultValue = "") String name,
                              Model model) {
 
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
         Page<User> page = userService.listUsersByNameLike(name, pageable);
-        List<User> list = page.getContent();    // 当前所在页面数据列表
+        // 当前所在页面数据列表
+        List<User> list = page.getContent();
 
         model.addAttribute("page", page);
         model.addAttribute("userList", list);
-        return new ModelAndView(async == true ? "users/list :: #mainContainerRepleace" : "users/list", "userModel", model);
+        return new ModelAndView(async ? "users/list :: #mainContainerRepleace" : "users/list", "userModel", model);
     }
 
     /**
