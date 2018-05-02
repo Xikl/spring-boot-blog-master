@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
+import static com.ximo.springbootblogmaster.constant.CommonConstant.LIKE;
+
 /**
  * @author 朱文赵
  * @date 2018/4/8
@@ -50,6 +52,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
+    /**
+     * getOne 不存在则直接抛出异常
+     *
+     * @param id 主键id
+     * @return 用户信息
+     */
     @Override
     public User getUserById(Long id) {
         return userRepository.getOne(id);
@@ -62,10 +70,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Page<User> listUsersByNameLike(String name, Pageable pageable) {
-        // 模糊查询
-        name = "%" + name + "%";
-        Page<User> users = userRepository.findByNameLike(name, pageable);
-        return users;
+        return userRepository.findByNameLike(LIKE.concat(name).concat(LIKE), pageable);
     }
 
     @Override
@@ -74,8 +79,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> listUsersByUsernames(Collection<String> usernames) {
-        return userRepository.findByUsernameIn(usernames);
+    public List<User> listUsersByUsername(Collection<String> username) {
+        return userRepository.findByUsernameIn(username);
     }
 
 }

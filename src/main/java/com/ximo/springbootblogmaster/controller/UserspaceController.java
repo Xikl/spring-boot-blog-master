@@ -7,7 +7,7 @@ import com.ximo.springbootblogmaster.domain.Vote;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.service.UserService;
-import com.ximo.springbootblogmaster.util.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +29,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+
+import static com.ximo.springbootblogmaster.constant.CommonConstant.HOT;
+import static com.ximo.springbootblogmaster.constant.CommonConstant.NEW;
 
 /**
  * @author 朱文赵
@@ -146,16 +149,19 @@ public class UserspaceController {
 
         Page<Blog> page = null;
 
-        if (catalogId != null && catalogId > 0) { // 分类查询
+        // 分类查询
+        if (catalogId != null && catalogId > 0) {
             Catalog catalog = catalogService.getCatalogById(catalogId);
             Pageable pageable = PageRequest.of(pageIndex, pageSize);
             page = blogService.listBlogsByCatalog(catalog, pageable);
             order = "";
-        } else if ("hot".equals(order)) { // 最热查询
+        } else if (HOT.equals(order)) {
+            // 最热查询
             Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize");
             Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
             page = blogService.listBlogsByTitleVoteAndSort(user, keyword, pageable);
-        } else if ("new".equals(order)) { // 最新查询
+        } else if (NEW.equals(order)) {
+            // 最新查询
             Pageable pageable = PageRequest.of(pageIndex, pageSize);
             page = blogService.listBlogsByTitleVote(user, keyword, pageable);
         }
@@ -304,7 +310,7 @@ public class UserspaceController {
             }
 
         } catch (ConstraintViolationException e) {
-            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.joinMessage(e)));
         } catch (Exception e) {
             return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }

@@ -73,8 +73,8 @@ public interface UserService {
     /**
      * 更具名称列表查询
      *
-     * @param usernames
+     * @param username
      * @return
      */
-    List<User> listUsersByUsernames(Collection<String> usernames);
+    List<User> listUsersByUsername(Collection<String> username);
 }

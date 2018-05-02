@@ -13,6 +13,8 @@ public class ResultVO<T> {
 
     private static final Integer SUCCESS_CODE = 0;
 
+    /** 是否成功*/
+    private Boolean success;
     /** 返回码*/
     private Integer code;
     /** 返回信息*/
@@ -22,10 +24,12 @@ public class ResultVO<T> {
 
     /** 私有构造*/
     private ResultVO() {
+        throw new UnsupportedOperationException();
     }
 
     /** 私有构造*/
-    private ResultVO(Integer code, String msg, T data) {
+    private ResultVO(Boolean success, Integer code, String msg, T data) {
+        this.success = success;
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -50,17 +54,17 @@ public class ResultVO<T> {
 
     /** 成功方法 指定返回信息 和 返回数据*/
     public static <T> ResultVO<T> success(String msg, T data) {
-        return new ResultVO<>(SUCCESS_CODE, msg, data);
+        return new ResultVO<>(true, SUCCESS_CODE, msg, data);
     }
 
     /** 错误方法*/
     public static <T> ResultVO<T> error(ResultEnums enums) {
-        return new ResultVO<>(enums.getCode(), enums.getMsg(), null);
+        return new ResultVO<>(false, enums.getCode(), enums.getMsg(), null);
     }
 
     /** 错误方法*/
     public static <T> ResultVO<T> error(Integer code, String msg) {
-        return new ResultVO<>(code, msg, null);
+        return new ResultVO<>(false, code, msg, null);
     }
 
 

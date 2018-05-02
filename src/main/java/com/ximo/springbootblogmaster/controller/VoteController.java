@@ -3,7 +3,7 @@ package com.ximo.springbootblogmaster.controller;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.VoteService;
-import com.ximo.springbootblogmaster.util.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ public class VoteController {
         try {
             blogService.createVote(blogId);
         } catch (ConstraintViolationException e) {
-            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.joinMessage(e)));
         } catch (Exception e) {
             return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }
@@ -84,7 +84,7 @@ public class VoteController {
             blogService.removeVote(blogId, id);
             voteService.removeVote(id);
         } catch (ConstraintViolationException e) {
-            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.joinMessage(e)));
         } catch (Exception e) {
             return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }

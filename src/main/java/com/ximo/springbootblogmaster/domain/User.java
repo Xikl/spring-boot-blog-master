@@ -19,6 +19,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,9 +32,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @description 用户.
  */
 @Entity
+@Data
 public class User implements UserDetails, Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1564620897358354792L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,29 +86,6 @@ public class User implements UserDetails, Serializable {
 		this.password = password;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -118,17 +97,9 @@ public class User implements UserDetails, Serializable {
 		return simpleAuthorities;
 	}
 
-	public void setAuthorities(List<Authority> authorities) {
-		this.authorities = authorities;
-	}
-
 	@Override
 	public String getUsername() {
 		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	@Override
@@ -136,21 +107,9 @@ public class User implements UserDetails, Serializable {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public void setEncodePassword(String password) {
 		PasswordEncoder  encoder = new BCryptPasswordEncoder();
 		this.password = encoder.encode(password);
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
 	}
 
 	@Override
@@ -173,9 +132,4 @@ public class User implements UserDetails, Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("User[id=%d, username='%s', name='%s', email='%s', password='%s']", id, username, name, email,
-				password);
-	}
 }

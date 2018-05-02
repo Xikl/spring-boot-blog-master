@@ -4,7 +4,7 @@ import com.ximo.springbootblogmaster.domain.Authority;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.service.AuthorityService;
 import com.ximo.springbootblogmaster.service.UserService;
-import com.ximo.springbootblogmaster.util.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,14 +24,13 @@ import java.util.List;
 
 
 /**
- * 用户控制器.
- *
- * @author <a href="https://waylau.com">Way Lau</a>
- * @date 2017年2月26日
+ * @author 朱文赵
+ * @date 2018/4/8
+ * @description 用户控制器.指定角色权限才能操作方法
  */
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class UserController {
 
     @Autowired
@@ -106,7 +105,7 @@ public class UserController {
         try {
             userService.saveUser(user);
         } catch (ConstraintViolationException e) {
-            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.joinMessage(e)));
         }
 
         return ResponseEntity.ok().body(new Response(true, "处理成功", user));

@@ -10,4 +10,10 @@ public interface CommonConstant {
     /** like */
     String LIKE = "%";
 
+    String HOT = "hot";
+
+    String NEW = "new";
+
+    String SEMICOLON = ";";
+
 }

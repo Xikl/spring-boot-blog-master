@@ -191,6 +191,6 @@ public class EsBlogServiceImpl implements EsBlogService {
             String username = actionTypeBucket.getKey().toString();
             usernamelist.add(username);
         }
-        return userService.listUsersByUsernames(usernamelist);
+        return userService.listUsersByUsername(usernamelist);
     }
 }

@@ -18,25 +18,25 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * 根据用户名分页查询用户列表
      *
-     * @param name
-     * @param pageable
-     * @return
+     * @param name 昵称
+     * @param pageable pageAble对象
+     * @return 分页
      */
     Page<User> findByNameLike(String name, Pageable pageable);
 
     /**
      * 根据名称查询
      *
-     * @param username
-     * @return
+     * @param username 用户名
+     * @return user类
      */
     User findByUsername(String username);
 
     /**
      * 根据名称列表查询
      *
-     * @param usernames
-     * @return
+     * @param username 用户名
+     * @return 用户列表
      */
-    List<User> findByUsernameIn(Collection<String> usernames);
+    List<User> findByUsernameIn(Collection<String> username);
 }

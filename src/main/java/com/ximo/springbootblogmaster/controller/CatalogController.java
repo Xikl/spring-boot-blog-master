@@ -3,7 +3,7 @@ package com.ximo.springbootblogmaster.controller;
 import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.service.CatalogService;
-import com.ximo.springbootblogmaster.util.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.vo.CatalogVO;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +82,7 @@ public class CatalogController {
             catalog.setUser(user);
             catalogService.saveCatalog(catalog);
         } catch (ConstraintViolationException e) {
-            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.joinMessage(e)));
         } catch (Exception e) {
             return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }
@@ -101,7 +101,7 @@ public class CatalogController {
         try {
             catalogService.removeCatalog(id);
         } catch (ConstraintViolationException e) {
-            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.joinMessage(e)));
         } catch (Exception e) {
             return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }
