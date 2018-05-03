@@ -86,8 +86,9 @@ public class UserController {
         authorities.add(authorityService.getAuthorityById(authorityId));
         user.setAuthorities(authorities);
 
+        // 加密密码
         if (user.getId() == null) {
-            user.setEncodePassword(user.getPassword()); // 加密密码
+            user.setEncodePassword(user.getPassword());
         } else {
             // 判断密码是否做了变更
             User originalUser = userService.getUserById(user.getId());

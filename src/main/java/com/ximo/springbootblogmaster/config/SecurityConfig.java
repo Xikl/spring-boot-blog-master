@@ -1,6 +1,7 @@
 package com.ximo.springbootblogmaster.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,29 +18,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author 朱文赵
  * @date 2018/4/8
  * @description Spring Security 配置类.
+ * EnableGlobalMethodSecurity启用方法安全设置 EnableWebSecurity开启权限管理
  */
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用方法安全设置
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String KEY = "waylau.com";
 
+    @Qualifier("userServiceImpl")
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /** 使用 BCrypt 加密 */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();   // 使用 BCrypt 加密
+        return new BCryptPasswordEncoder();
     }
 
+    /** 设置密码加密方式 */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder); // 设置密码加密方式
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
 
@@ -63,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 认证信息管理
      *
-     * @param auth
+     * @param auth AuthenticationManagerBuilder
      * @throws Exception
      */
     @Autowired

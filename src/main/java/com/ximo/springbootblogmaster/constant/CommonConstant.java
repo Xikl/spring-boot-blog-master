@@ -16,4 +16,6 @@ public interface CommonConstant {
 
     String SEMICOLON = ";";
 
+    Long ROLE_USER_AUTHORITY_ID = 2L;
+
 }

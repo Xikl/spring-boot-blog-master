@@ -12,9 +12,10 @@ public interface AuthorityService {
 
 
 	/**
+	 * 根据权限id查询权限
 	 *
-	 * @param id
-	 * @return
+	 * @param id 权限id
+	 * @return 权限
 	 */
 	Authority getAuthorityById(Long id);
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -86,15 +87,15 @@ public class User implements UserDetails, Serializable {
 		this.password = password;
 	}
 
-
+	/**
+	 * 需将 List<Authority> 转成 List<SimpleGrantedAuthority>，否则前端拿不到角色列表名称
+	 *
+	 * @return List<SimpleGrantedAuthority>
+	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		//  需将 List<Authority> 转成 List<SimpleGrantedAuthority>，否则前端拿不到角色列表名称
-		List<SimpleGrantedAuthority> simpleAuthorities = new ArrayList<>();
-		for(GrantedAuthority authority : this.authorities){
-			simpleAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
-		}
-		return simpleAuthorities;
+		return this.authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+				.collect(Collectors.toList());
 	}
 
 	@Override

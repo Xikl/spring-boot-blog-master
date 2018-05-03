@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -13,37 +15,26 @@ import org.springframework.security.core.GrantedAuthority;
  * @date 2018/4/8
  * @description 权限控制器.
  */
-@Entity // 实体
+@Entity
 public class Authority implements GrantedAuthority {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1873448714012612535L;
 
-	@Id // 主键
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
-	private Long id; // 用户的唯一标识
+	/** 权限id */
+	@Id
+	@Getter @Setter
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	@Column(nullable = false) // 映射为字段，值不能为空
+	/** 映射为字段，值不能为空 */
+	@Column(nullable = false)
+	@Setter
 	private String name;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.security.core.GrantedAuthority#getAuthority()
-	 */
+	/** 方法实现 接口*/
 	@Override
 	public String getAuthority() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 }
