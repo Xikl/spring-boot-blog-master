@@ -1,6 +1,5 @@
 /**
- * Bolg main JS.
- * Created by waylau.com on 2017/3/9.
+ * Blog main JS.
  */
 "use strict";
 //# sourceURL=main.js
