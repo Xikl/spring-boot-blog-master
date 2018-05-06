@@ -4,10 +4,10 @@ import com.ximo.springbootblogmaster.domain.Blog;
 import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.Vote;
+import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.service.UserService;
-import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +54,16 @@ public class UserspaceController {
     @Autowired
     private CatalogService catalogService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    /**
+     * 跳转页面
+     *
+     * @param username 用户名
+     * @param model model
+     * @return 用户名
+     */
     @GetMapping("/{username}")
     public String userSpace(@PathVariable("username") String username, Model model) {
         User user = (User) userDetailsService.loadUserByUsername(username);
@@ -63,6 +71,14 @@ public class UserspaceController {
         return "redirect:/u/" + username + "/blogs";
     }
 
+    /**
+     * 获得个人设置页面
+     * 使用PreAuthorize注解 允许直接访问当前 Authentication对象 从SecurityContext中获得
+     *
+     * @param username 用户名
+     * @param model model
+     * @return 用户页面
+     */
     @GetMapping("/{username}/profile")
     @PreAuthorize("authentication.name.equals(#username)")
     public ModelAndView profile(@PathVariable("username") String username, Model model) {
@@ -74,9 +90,8 @@ public class UserspaceController {
     /**
      * 保存个人设置
      *
-     * @param user
-     * @param result
-     * @param redirect
+     * @param username 用户名
+     * @param user 用户
      * @return
      */
     @PostMapping("/{username}/profile")
@@ -87,12 +102,14 @@ public class UserspaceController {
         originalUser.setName(user.getName());
 
         // 判断密码是否做了变更
-        String rawPassword = originalUser.getPassword();
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodePasswd = encoder.encode(user.getPassword());
-        boolean isMatch = encoder.matches(rawPassword, encodePasswd);
+        String originalPassword = originalUser.getPassword();
+//        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        //将密码encode类改为注入的形式
+        String newPassword = passwordEncoder.encode(user.getPassword());
+        boolean isMatch = passwordEncoder.matches(originalPassword, newPassword);
         if (!isMatch) {
-            originalUser.setEncodePassword(user.getPassword());
+//            originalUser.setEncodePassword(user.getPassword());
+            originalUser.setPassword(newPassword);
         }
 
         userService.saveUser(originalUser);
@@ -119,7 +136,7 @@ public class UserspaceController {
      * 保存头像
      *
      * @param username
-     * @param model
+     * @param user
      * @return
      */
     @PostMapping("/{username}/avatar")
@@ -224,10 +241,10 @@ public class UserspaceController {
 
 
     /**
-     * 删除博客
+     *  删除博客
      *
-     * @param id
-     * @param model
+     * @param username 用户名
+     * @param id 博客id
      * @return
      */
     @DeleteMapping("/{username}/blogs/{id}")

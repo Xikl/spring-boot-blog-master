@@ -94,8 +94,8 @@ public class UserController {
             User originalUser = userService.getUserById(user.getId());
             String rawPassword = originalUser.getPassword();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
-            String encodePasswd = encoder.encode(user.getPassword());
-            boolean isMatch = encoder.matches(rawPassword, encodePasswd);
+            String encodePassword = encoder.encode(user.getPassword());
+            boolean isMatch = encoder.matches(rawPassword, encodePassword);
             if (!isMatch) {
                 user.setEncodePassword(user.getPassword());
             } else {

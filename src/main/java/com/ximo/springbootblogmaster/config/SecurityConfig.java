@@ -68,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 认证信息管理
+     * 此方法为注入的目的是为AuthenticationManagerBuilder添加属性
      *
      * @param auth AuthenticationManagerBuilder
      * @throws Exception

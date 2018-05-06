@@ -1,5 +1,7 @@
 package com.ximo.springbootblogmaster.controller;
 
+import static com.ximo.springbootblogmaster.constant.CommonConstant.HOT;
+import static com.ximo.springbootblogmaster.constant.CommonConstant.NEW;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.es.EsBlog;
 import com.ximo.springbootblogmaster.service.EsBlogService;
@@ -45,11 +47,11 @@ public class BlogController {
         boolean isEmpty = true;
         try {
             // 最热查询
-            if ("hot".equals(order)) {
+            if (HOT.equals(order)) {
                 Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
                 Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
                 page = esBlogService.listHotestEsBlogs(keyword, pageable);
-            } else if ("new".equals(order)) {
+            } else if (NEW.equals(order)) {
                 // 最新查询
                 Sort sort = new Sort(Direction.DESC, "createTime");
                 Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
