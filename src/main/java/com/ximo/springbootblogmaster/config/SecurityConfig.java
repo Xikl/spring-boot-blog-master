@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.ximo.springbootblogmaster.constant.CommonConstant.KEY;
+
 /**
  * @author 朱文赵
  * @date 2018/4/8
@@ -23,8 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private static final String KEY = "ximo.com";
 
     @Qualifier("userServiceImpl")
     @Autowired
@@ -61,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login").failureUrl("/login-error") // 自定义登录界面
                 .and().rememberMe().key(KEY) // 启用 remember me
                 .and().exceptionHandling().accessDeniedPage("/403");  // 处理异常，拒绝访问就重定向到 403 页面
+
         http.csrf().ignoringAntMatchers("/h2-console/**"); // 禁用 H2 控制台的 CSRF 防护
         http.headers().frameOptions().sameOrigin(); // 允许来自同一来源的H2 控制台的请求
     }

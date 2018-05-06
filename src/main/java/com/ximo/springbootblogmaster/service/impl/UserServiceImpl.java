@@ -78,6 +78,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * 加载用户
+     *
+     * @param username 用户名
+     * @return 密码
+     */
     @Override
     public List<User> listUsersByUsername(Collection<String> username) {
         return userRepository.findByUsernameIn(username);
