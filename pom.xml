@@ -90,11 +90,11 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.github.rjeschke/txtmark -->
+		<!-- markdown 依赖 解析markdown的格式 -->
 		<dependency>
-			<groupId>com.github.rjeschke</groupId>
+			<groupId>es.nitaur.markdown</groupId>
 			<artifactId>txtmark</artifactId>
-			<version>0.13</version>
+			<version>0.16</version>
 		</dependency>
 
 	</dependencies>
