@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String KEY = "waylau.com";
+    private static final String KEY = "ximo.com";
 
     @Qualifier("userServiceImpl")
     @Autowired
