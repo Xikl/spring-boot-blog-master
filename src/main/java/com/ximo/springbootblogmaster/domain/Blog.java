@@ -1,83 +1,93 @@
 package com.ximo.springbootblogmaster.domain;
 
+import com.github.rjeschke.txtmark.Processor;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-
-import org.springframework.data.elasticsearch.annotations.Document;
-
-import com.github.rjeschke.txtmark.Processor;
 
 /**
  * @author 朱文赵
  * @date 2018/4/8
  * @description 博客.
  */
-@Entity // 实体
+@Entity
+@Data
 @Document(indexName = "blog", type = "blog")
 public class Blog implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    @Id // 主键
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
-    private Long id; // 用户的唯一标识
+    private static final long serialVersionUID = 4756516151363843515L;
 
+    /** 主键 博客的唯一标识*/
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /** 博客标题 */
     @NotEmpty(message = "标题不能为空")
     @Size(min = 2, max = 50)
-    @Column(nullable = false, length = 50) // 映射为字段，值不能为空
+    @Column(nullable = false, length = 50)
     private String title;
 
+    /** 博客摘要*/
     @NotEmpty(message = "摘要不能为空")
     @Size(min = 2, max = 300)
-    @Column(nullable = false) // 映射为字段，值不能为空
+    @Column(nullable = false)
     private String summary;
 
-    @Lob  // 大对象，映射 MySQL 的 Long Text 类型
-    @Basic(fetch = FetchType.LAZY) // 懒加载
+    /**
+     *  标签：@Lob 大对象，映射 MySQL 的 Long Text 类型
+     *  懒加载 @Basic
+     *  映射为字段，值不能为空 @Nullable
+     *  存储的是markdown的内容
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
     @NotEmpty(message = "内容不能为空")
     @Size(min = 2)
-    @Column(nullable = false) // 映射为字段，值不能为空
+    @Column(nullable = false)
     private String content;
 
-    @Lob  // 大对象，映射 MySQL 的 Long Text 类型
-    @Basic(fetch = FetchType.LAZY) // 懒加载
+    /**
+     * 大对象，映射 MySQL 的 Long Text 类型
+     * 懒加载
+     * 映射为字段，值不能为空
+     * 存储的是将 md 转为 html的内容
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
     @NotEmpty(message = "内容不能为空")
     @Size(min = 2)
-    @Column(nullable = false) // 映射为字段，值不能为空
-    private String htmlContent; // 将 md 转为 html
+    @Column(nullable = false)
+    private String htmlContent;
 
+    /** 用户一对一关联*/
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false) // 映射为字段，值不能为空
-    @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
+    /** 由数据库自动创建时间 */
+    @Column(nullable = false)
+    @CreationTimestamp
     private Timestamp createTime;
 
+    /** 访问量、阅读量*/
     @Column(name = "readSize")
-    private Integer readSize = 0; // 访问量、阅读量
+    private Integer readSize = 0;
 
+    /** 评论量 */
     @Column(name = "commentSize")
-    private Integer commentSize = 0;  // 评论量
+    private Integer commentSize = 0;
 
+    /** 点赞量 */
     @Column(name = "voteSize")
-    private Integer voteSize = 0;  // 点赞量
+    private Integer voteSize = 0;
 
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -94,11 +104,11 @@ public class Blog implements Serializable {
     @JoinColumn(name = "catalog_id")
     private Catalog catalog;
 
+    /** 标签 */
     @Column(name = "tags", length = 100)
-    private String tags;  // 标签
+    private String tags;
 
     protected Blog() {
-        // TODO Auto-generated constructor stub
     }
 
     public Blog(String title, String summary, String content) {
@@ -107,81 +117,9 @@ public class Blog implements Serializable {
         this.content = content;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
     public void setContent(String content) {
         this.content = content;
         this.htmlContent = Processor.process(content);
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public String getHtmlContent() {
-        return htmlContent;
-    }
-
-    public Integer getReadSize() {
-        return readSize;
-    }
-
-    public void setReadSize(Integer readSize) {
-        this.readSize = readSize;
-    }
-
-    public Integer getCommentSize() {
-        return commentSize;
-    }
-
-    public void setCommentSize(Integer commentSize) {
-        this.commentSize = commentSize;
-    }
-
-    public Integer getVoteSize() {
-        return voteSize;
-    }
-
-    public void setVoteSize(Integer voteSize) {
-        this.voteSize = voteSize;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
     }
 
     public void setComments(List<Comment> comments) {
@@ -192,7 +130,7 @@ public class Blog implements Serializable {
     /**
      * 添加评论
      *
-     * @param comment
+     * @param comment 评论
      */
     public void addComment(Comment comment) {
         this.comments.add(comment);
@@ -202,30 +140,30 @@ public class Blog implements Serializable {
     /**
      * 删除评论
      *
-     * @param commentId
+     * @param commentId 评论id
      */
     public void removeComment(Long commentId) {
-        for (int index = 0; index < this.comments.size(); index++) {
-            if (comments.get(index).getId().equals(commentId)) {
-                this.comments.remove(index);
-                break;
-            }
-        }
-
+//        for (int index = 0; index < this.comments.size(); index++) {
+//            if (comments.get(index).getId().equals(commentId)) {
+//                this.comments.remove(index);
+//                break;
+//            }
+//        }
+        comments.removeIf(comment -> comment.getId().equals(commentId));
         this.commentSize = this.comments.size();
     }
 
     /**
      * 点赞
      *
-     * @param vote
+     * @param vote 点赞
      * @return
      */
     public boolean addVote(Vote vote) {
         boolean isExist = false;
         // 判断重复
-        for (int index = 0; index < this.votes.size(); index++) {
-            if (this.votes.get(index).getUser().getId() == vote.getUser().getId()) {
+        for (Vote theVote : this.votes) {
+            if (theVote.getUser().getId().equals(vote.getUser().getId())) {
                 isExist = true;
                 break;
             }
@@ -242,16 +180,23 @@ public class Blog implements Serializable {
     /**
      * 取消点赞
      *
-     * @param voteId
+     * @param voteId  点赞id
      */
     public void removeVote(Long voteId) {
-        for (int index = 0; index < this.votes.size(); index++) {
-            if (this.votes.get(index).getId().equals(voteId)) {
-                this.votes.remove(index);
-                break;
-            }
-        }
+//        for (int index = 0; index < this.votes.size(); index++) {
+//            if (this.votes.get(index).getId().equals(voteId)) {
+//                this.votes.remove(index);
+//                break;
+//            }
+//        }
+//        for (Vote vote : this.votes) {
+//            if (vote.getId().equals(voteId)) {
+//                this.votes.remove(vote);
+//                break;
+//            }
+//        }
 
+        votes.removeIf(vote -> vote.getId().equals(voteId));
         this.voteSize = this.votes.size();
     }
 
