@@ -119,6 +119,7 @@ public class Blog implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+        //解析markdown的格式
         this.htmlContent = Processor.process(content);
     }
 
@@ -200,29 +201,9 @@ public class Blog implements Serializable {
         this.voteSize = this.votes.size();
     }
 
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
         this.voteSize = this.votes.size();
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public Catalog getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(Catalog catalog) {
-        this.catalog = catalog;
     }
 
 }

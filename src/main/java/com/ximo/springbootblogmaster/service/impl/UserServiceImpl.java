@@ -3,6 +3,7 @@ package com.ximo.springbootblogmaster.service.impl;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.repository.UserRepository;
 import com.ximo.springbootblogmaster.service.UserService;
+import com.ximo.springbootblogmaster.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Page<User> listUsersByNameLike(String name, Pageable pageable) {
-        return userRepository.findByNameLike(LIKE.concat(name).concat(LIKE), pageable);
+        return userRepository.findByNameLike(CommonUtil.formatLikeString(name), pageable);
     }
 
     @Override

@@ -13,7 +13,8 @@ public enum ResultEnums {
     /** 成功*/
     SUCCESS(0, "成功"),
     INNER_ERROR(-1, "内部错误"),
-    AUTHORITY_NOT_FOUND(1, "没有该权限")
+    AUTHORITY_NOT_FOUND(1, "没有该权限"),
+    RESOURCE_NOT_FOUND(2, "哎呦，你所查找的好像消失了")
     ;
 
 

@@ -2,9 +2,12 @@ package com.ximo.springbootblogmaster.service.impl;
 
 import com.ximo.springbootblogmaster.domain.*;
 import com.ximo.springbootblogmaster.domain.es.EsBlog;
+import com.ximo.springbootblogmaster.enums.ResultEnums;
+import com.ximo.springbootblogmaster.exception.BlogException;
 import com.ximo.springbootblogmaster.repository.BlogRepository;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.EsBlogService;
+import com.ximo.springbootblogmaster.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +27,13 @@ public class BlogServiceImpl implements BlogService {
 
     @Autowired
     private BlogRepository blogRepository;
+
     @Autowired
     private EsBlogService esBlogService;
 
     /**
+     * 保存
+     *
      * @param blog
      * @return
      */
@@ -35,7 +41,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Blog saveBlog(Blog blog) {
         boolean isNew = (blog.getId() == null);
-        EsBlog esBlog = null;
+        EsBlog esBlog;
 
         Blog returnBlog = blogRepository.save(blog);
 
@@ -79,19 +85,17 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Page<Blog> listBlogsByTitleVote(User user, String title, Pageable pageable) {
         // 模糊查询
-        title = "%" + title + "%";
+        title = CommonUtil.formatLikeString(title);
         //Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrderByCreateTimeDesc(user, title, pageable);
         String tags = title;
-        Page<Blog> blogs = blogRepository.findByTitleLikeAndUserOrTagsLikeAndUserOrderByCreateTimeDesc(title, user, tags, user, pageable);
-        return blogs;
+        return blogRepository.findByTitleLikeAndUserOrTagsLikeAndUserOrderByCreateTimeDesc(title, user, tags, user, pageable);
     }
 
     @Override
     public Page<Blog> listBlogsByTitleVoteAndSort(User user, String title, Pageable pageable) {
         // 模糊查询
-        title = "%" + title + "%";
-        Page<Blog> blogs = blogRepository.findByUserAndTitleLike(user, title, pageable);
-        return blogs;
+        title = CommonUtil.formatLikeString(title);
+        return blogRepository.findByUserAndTitleLike(user, title, pageable);
     }
 
     @Override
@@ -101,14 +105,15 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void readingIncrease(Long id) {
-        Blog blog = blogRepository.findById(id).orElse(null);
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
+        //todo  加锁
         blog.setReadSize(blog.getCommentSize() + 1);
         this.saveBlog(blog);
     }
 
     @Override
     public Blog createComment(Long blogId, String commentContent) {
-        Blog originalBlog = blogRepository.findById(blogId).orElse(null);
+        Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Comment comment = new Comment(user, commentContent);
         originalBlog.addComment(comment);
@@ -117,14 +122,14 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void removeComment(Long blogId, Long commentId) {
-        Blog originalBlog = blogRepository.findById(blogId).orElse(null);
+        Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         originalBlog.removeComment(commentId);
         this.saveBlog(originalBlog);
     }
 
     @Override
     public Blog createVote(Long blogId) {
-        Blog originalBlog = blogRepository.findById(blogId).orElse(null);
+        Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Vote vote = new Vote(user);
         boolean isExist = originalBlog.addVote(vote);
@@ -136,7 +141,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void removeVote(Long blogId, Long voteId) {
-        Blog originalBlog = blogRepository.findById(blogId).orElse(null);
+        Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         originalBlog.removeVote(voteId);
         this.saveBlog(originalBlog);
     }

@@ -15,7 +15,7 @@ public interface BlogService {
     /**
      * 保存Blog
      *
-     * @param EsBlog
+     * @param blog
      * @return
      */
     Blog saveBlog(Blog blog);
@@ -37,9 +37,11 @@ public interface BlogService {
     Blog getBlogById(Long id);
 
     /**
-     * 根据用户名进行分页模糊查询（最新）
+     * 根据用户进行分页模糊查询（最新）
      *
      * @param user
+     * @param title
+     * @param pageable
      * @return
      */
     Page<Blog> listBlogsByTitleVote(User user, String title, Pageable pageable);
