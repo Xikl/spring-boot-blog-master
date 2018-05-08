@@ -6,10 +6,12 @@ import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.CommentService;
 import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,9 +50,9 @@ public class CommentController {
 
         // 判断操作用户是否是评论的所有者
         String commentOwner = "";
-        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-            User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (AuthenticationUtil.isAuthentication(authentication)) {
+            User principal = (User) authentication.getPrincipal();
             if (principal != null) {
                 commentOwner = principal.getUsername();
             }
@@ -96,9 +98,9 @@ public class CommentController {
         User user = commentService.getCommentById(id).getUser();
 
         // 判断操作用户是否是评论的所有者
-        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-            User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (AuthenticationUtil.isAuthentication(authentication)) {
+            User principal = (User) authentication.getPrincipal();
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;
             }

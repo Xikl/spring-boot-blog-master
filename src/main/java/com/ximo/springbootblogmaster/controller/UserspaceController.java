@@ -8,6 +8,7 @@ import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.service.UserService;
+import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -151,7 +153,19 @@ public class UserspaceController {
         return ResponseEntity.ok().body(new Response(true, "处理成功", avatarUrl));
     }
 
-
+    /**
+     * 用户页面
+     *
+     * @param username
+     * @param order
+     * @param catalogId
+     * @param keyword
+     * @param async
+     * @param pageIndex
+     * @param pageSize
+     * @param model
+     * @return
+     */
     @GetMapping("/{username}/blogs")
     public String listBlogsByOrder(@PathVariable("username") String username,
                                    @RequestParam(value = "order", required = false, defaultValue = "new") String order,
@@ -183,8 +197,8 @@ public class UserspaceController {
             page = blogService.listBlogsByTitleVote(user, keyword, pageable);
         }
 
-
-        List<Blog> list = page.getContent();    // 当前所在页面数据列表
+        //当前所在页面数据列表
+        List<Blog> list = page.getContent();
 
         model.addAttribute("user", user);
         model.addAttribute("order", order);
@@ -212,9 +226,9 @@ public class UserspaceController {
 
         // 判断操作用户是否是博客的所有者
         boolean isBlogOwner = false;
-        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && !"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-            principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (AuthenticationUtil.isAuthentication(authentication)) {
+            principal = (User) authentication.getPrincipal();
             if (principal != null && username.equals(principal.getUsername())) {
                 isBlogOwner = true;
             }
@@ -222,7 +236,8 @@ public class UserspaceController {
 
         // 判断操作用户的点赞情况
         List<Vote> votes = blog.getVotes();
-        Vote currentVote = null; // 当前用户的点赞情况
+        //当前用户的点赞情况
+        Vote currentVote = null;
 
         if (principal != null) {
             for (Vote vote : votes) {
@@ -238,6 +253,7 @@ public class UserspaceController {
 
         return "/userspace/blog";
     }
+
 
 
     /**

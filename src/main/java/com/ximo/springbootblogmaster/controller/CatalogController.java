@@ -4,11 +4,14 @@ import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.CatalogVO;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
@@ -31,27 +34,28 @@ public class CatalogController {
     @Autowired
     private CatalogService catalogService;
 
+    @Qualifier("userServiceImpl")
     @Autowired
     private UserDetailsService userDetailsService;
 
     /**
      * 获取分类列表
      *
-     * @param blogId
+     * @param username
      * @param model
      * @return
      */
     @GetMapping
-    public String listComments(@RequestParam(value = "username", required = true) String username, Model model) {
+    public String listComments(@RequestParam(value = "username") String username, Model model) {
         User user = (User) userDetailsService.loadUserByUsername(username);
         List<Catalog> catalogs = catalogService.listCatalogs(user);
 
         // 判断操作用户是否是分类的所有者
         boolean isOwner = false;
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-            User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (AuthenticationUtil.isAuthentication(authentication)) {
+            User principal = (User) authentication.getPrincipal();
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;
             }
@@ -64,13 +68,13 @@ public class CatalogController {
 
     /**
      * 发表分类
+     * 指定用户才能操作方法
      *
-     * @param blogId
-     * @param commentContent
+     * @param catalogVO
      * @return
      */
     @PostMapping
-    @PreAuthorize("authentication.name.equals(#catalogVO.username)")// 指定用户才能操作方法
+    @PreAuthorize("authentication.name.equals(#catalogVO.username)")
     public ResponseEntity<Response> create(@RequestBody CatalogVO catalogVO) {
 
         String username = catalogVO.getUsername();
@@ -93,10 +97,12 @@ public class CatalogController {
     /**
      * 删除分类
      *
+     * @param username
+     * @param id
      * @return
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("authentication.name.equals(#username)")  // 指定用户才能操作方法
+    @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> delete(String username, @PathVariable("id") Long id) {
         try {
             catalogService.removeCatalog(id);
@@ -112,7 +118,6 @@ public class CatalogController {
     /**
      * 获取分类编辑界面
      *
-     * @param id
      * @param model
      * @return
      */

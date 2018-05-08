@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -106,8 +107,9 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void readingIncrease(Long id) {
         Blog blog = blogRepository.findById(id).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
-        //todo  加锁
-        blog.setReadSize(blog.getCommentSize() + 1);
+        //todo  加锁 改为原子变量
+        AtomicInteger integer = new AtomicInteger(blog.getCommentSize());
+        blog.setReadSize(integer.incrementAndGet());
         this.saveBlog(blog);
     }
 

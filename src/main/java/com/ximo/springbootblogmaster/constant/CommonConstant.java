@@ -25,4 +25,5 @@ public interface CommonConstant {
     /** spring security中rememberMe中的私钥key */
     String KEY = "ximo.com";
 
+    String ANONYMOUS_USER = "anonymousUser";
 }
