@@ -39,7 +39,6 @@ public class VoteController {
      * 发表点赞
      *
      * @param blogId
-     * @param VoteContent
      * @return
      */
     @PostMapping
@@ -71,7 +70,7 @@ public class VoteController {
 
         // 判断操作用户是否是点赞的所有者
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (AuthenticationUtil.isAuthentication(authentication)) {
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
             User principal = (User) authentication.getPrincipal();
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;

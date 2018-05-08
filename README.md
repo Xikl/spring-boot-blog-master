@@ -21,3 +21,10 @@ datetime 支持的范围是’1000-01-01 00:00:00’到’9999-12-31 23:59:59’
 - java8中快速利用迭代器删除：
 otes.removeIf(vote -> vote.getId().equals(voteId));
 ```
+#### 4. spring security中principle的思考
+```
+阅读源码发现：
+- principle在认证成功后会从一个cache中根据用户名拿到用户信息
+然后将其塞进一个xxxxToken类中如UsernamePasswordAuthenticationToken
+所以我们就可以在全局中拿到这个用户信息
+```

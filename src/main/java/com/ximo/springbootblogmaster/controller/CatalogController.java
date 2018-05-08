@@ -54,7 +54,7 @@ public class CatalogController {
         boolean isOwner = false;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (AuthenticationUtil.isAuthentication(authentication)) {
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
             User principal = (User) authentication.getPrincipal();
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;

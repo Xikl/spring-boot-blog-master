@@ -17,7 +17,7 @@ public class AuthenticationUtil {
     }
 
     /** 判断是否授权 不是匿名用户*/
-    public static boolean isAuthentication(Authentication authentication) {
+    public static boolean isAuthenticated(Authentication authentication) {
         return authentication != null && authentication.isAuthenticated()
                 && !ANONYMOUS_USER.equals(authentication.getPrincipal().toString());
     }

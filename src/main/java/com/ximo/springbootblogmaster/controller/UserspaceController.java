@@ -227,7 +227,7 @@ public class UserspaceController {
         // 判断操作用户是否是博客的所有者
         boolean isBlogOwner = false;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (AuthenticationUtil.isAuthentication(authentication)) {
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
             principal = (User) authentication.getPrincipal();
             if (principal != null && username.equals(principal.getUsername())) {
                 isBlogOwner = true;

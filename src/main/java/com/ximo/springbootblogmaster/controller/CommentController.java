@@ -51,7 +51,7 @@ public class CommentController {
         // 判断操作用户是否是评论的所有者
         String commentOwner = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (AuthenticationUtil.isAuthentication(authentication)) {
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
             User principal = (User) authentication.getPrincipal();
             if (principal != null) {
                 commentOwner = principal.getUsername();
@@ -99,7 +99,7 @@ public class CommentController {
 
         // 判断操作用户是否是评论的所有者
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (AuthenticationUtil.isAuthentication(authentication)) {
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
             User principal = (User) authentication.getPrincipal();
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;
