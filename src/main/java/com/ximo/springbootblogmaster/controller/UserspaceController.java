@@ -63,7 +63,7 @@ public class UserspaceController {
      * 跳转页面
      *
      * @param username 用户名
-     * @param model model
+     * @param model    model
      * @return 用户名
      */
     @GetMapping("/{username}")
@@ -78,7 +78,7 @@ public class UserspaceController {
      * 使用PreAuthorize注解 允许直接访问当前 Authentication对象 从SecurityContext中获得
      *
      * @param username 用户名
-     * @param model model
+     * @param model    model
      * @return 用户页面
      */
     @GetMapping("/{username}/profile")
@@ -93,7 +93,7 @@ public class UserspaceController {
      * 保存个人设置
      *
      * @param username 用户名
-     * @param user 用户
+     * @param user     用户
      * @return
      */
     @PostMapping("/{username}/profile")
@@ -255,18 +255,16 @@ public class UserspaceController {
     }
 
 
-
     /**
-     *  删除博客
+     * 删除博客
      *
      * @param username 用户名
-     * @param id 博客id
+     * @param id       博客id
      * @return
      */
     @DeleteMapping("/{username}/blogs/{id}")
     @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> deleteBlog(@PathVariable("username") String username, @PathVariable("id") Long id) {
-
         try {
             blogService.removeBlog(id);
         } catch (Exception e) {
@@ -325,9 +323,7 @@ public class UserspaceController {
             return ResponseEntity.ok().body(new Response(false, "未选择分类"));
         }
         try {
-
             // 判断是修改还是新增
-
             if (blog.getId() != null) {
                 Blog orignalBlog = blogService.getBlogById(blog.getId());
                 orignalBlog.setTitle(blog.getTitle());
