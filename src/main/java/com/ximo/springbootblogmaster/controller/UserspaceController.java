@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -226,9 +225,9 @@ public class UserspaceController {
 
         // 判断操作用户是否是博客的所有者
         boolean isBlogOwner = false;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = AuthenticationUtil.authentication();
         if (AuthenticationUtil.isAuthenticated(authentication)) {
-            principal = (User) authentication.getPrincipal();
+            principal = AuthenticationUtil.getUser(authentication);
             if (principal != null && username.equals(principal.getUsername())) {
                 isBlogOwner = true;
             }

@@ -130,6 +130,7 @@ public class Blog implements Serializable {
 
     /**
      * 添加评论
+     * 同时修改评论量的大小
      *
      * @param comment 评论
      */

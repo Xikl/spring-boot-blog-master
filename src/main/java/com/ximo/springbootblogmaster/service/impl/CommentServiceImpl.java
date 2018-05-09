@@ -20,6 +20,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
 
     /**
+     * 移除评论
+     *
      * @param id
      */
     @Override

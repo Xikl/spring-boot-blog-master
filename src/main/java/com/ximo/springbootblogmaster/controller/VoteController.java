@@ -1,16 +1,15 @@
 package com.ximo.springbootblogmaster.controller;
 
 import com.ximo.springbootblogmaster.domain.User;
+import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.VoteService;
-import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
 import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,9 +68,9 @@ public class VoteController {
         User user = voteService.getVoteById(id).getUser();
 
         // 判断操作用户是否是点赞的所有者
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = AuthenticationUtil.authentication();
         if (AuthenticationUtil.isAuthenticated(authentication)) {
-            User principal = (User) authentication.getPrincipal();
+            User principal = AuthenticationUtil.getUser(authentication);
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;
             }

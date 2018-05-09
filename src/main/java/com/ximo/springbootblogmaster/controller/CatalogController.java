@@ -2,8 +2,8 @@ package com.ximo.springbootblogmaster.controller;
 
 import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
-import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.handler.ConstraintViolationExceptionHandler;
+import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.CatalogVO;
 import com.ximo.springbootblogmaster.vo.Response;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,9 +52,9 @@ public class CatalogController {
         // 判断操作用户是否是分类的所有者
         boolean isOwner = false;
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = AuthenticationUtil.authentication();
         if (AuthenticationUtil.isAuthenticated(authentication)) {
-            User principal = (User) authentication.getPrincipal();
+            User principal = AuthenticationUtil.getUser(authentication);
             if (principal != null && user.getUsername().equals(principal.getUsername())) {
                 isOwner = true;
             }

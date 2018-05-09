@@ -1,5 +1,7 @@
 package com.ximo.springbootblogmaster.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -14,7 +16,8 @@ import java.sql.Timestamp;
  */
 @Entity
 public class Comment implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 7078252576987822850L;
 
 	/**  用户的唯一标识 */
 	@Id
@@ -25,18 +28,20 @@ public class Comment implements Serializable {
 	@Size(min=2, max=500)
 	@Column(nullable = false)
 	private String content;
- 
+
+	/** 用户*/
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
-	
+
+	/** 创建时间*/
 	@Column(nullable = false)
-	@org.hibernate.annotations.CreationTimestamp
+	@CreationTimestamp
 	private Timestamp createTime;
  
 	protected Comment() {
-		// TODO Auto-generated constructor stub
 	}
+
 	public Comment(User user, String content) {
 		this.content = content;
 		this.user = user;

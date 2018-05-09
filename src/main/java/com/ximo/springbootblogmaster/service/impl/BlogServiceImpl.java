@@ -7,11 +7,11 @@ import com.ximo.springbootblogmaster.exception.BlogException;
 import com.ximo.springbootblogmaster.repository.BlogRepository;
 import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.EsBlogService;
+import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -114,15 +114,17 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Blog createComment(Long blogId, String commentContent) {
         Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = AuthenticationUtil.getUser();
         Comment comment = new Comment(user, commentContent);
         originalBlog.addComment(comment);
         return this.saveBlog(originalBlog);
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public void removeComment(Long blogId, Long commentId) {
         Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         originalBlog.removeComment(commentId);
@@ -130,9 +132,10 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Blog createVote(Long blogId) {
         Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = AuthenticationUtil.getUser();
         Vote vote = new Vote(user);
         boolean isExist = originalBlog.addVote(vote);
         if (isExist) {
@@ -142,6 +145,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public void removeVote(Long blogId, Long voteId) {
         Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         originalBlog.removeVote(voteId);
