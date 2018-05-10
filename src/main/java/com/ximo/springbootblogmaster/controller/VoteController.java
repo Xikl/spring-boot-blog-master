@@ -36,12 +36,13 @@ public class VoteController {
 
     /**
      * 发表点赞
+     * 指定角色权限才能操作方法
      *
-     * @param blogId
-     * @return
+     * @param blogId 博客id
+     * @return 发表点赞
      */
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Response> createVote(Long blogId) {
 
         try {
@@ -57,25 +58,16 @@ public class VoteController {
 
     /**
      * 删除点赞
+     * 指定角色权限才能操作方法
      *
      * @return
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Response> delete(@PathVariable("id") Long id, Long blogId) {
-
-        boolean isOwner = false;
         User user = voteService.getVoteById(id).getUser();
-
         // 判断操作用户是否是点赞的所有者
-        Authentication authentication = AuthenticationUtil.authentication();
-        if (AuthenticationUtil.isAuthenticated(authentication)) {
-            User principal = AuthenticationUtil.getUser(authentication);
-            if (principal != null && user.getUsername().equals(principal.getUsername())) {
-                isOwner = true;
-            }
-        }
-
+        boolean isOwner = AuthenticationUtil.isOwner(user);
         if (!isOwner) {
             return ResponseEntity.ok().body(new Response(false, "没有操作权限"));
         }

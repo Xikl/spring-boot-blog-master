@@ -48,7 +48,34 @@ public class AuthenticationUtil {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+    /** 判断是否是所有者*/
+    public static boolean isOwner(User user) {
+        Authentication authentication = AuthenticationUtil.authentication();
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
+            User principal = AuthenticationUtil.getUser(authentication);
+            return isOwner(principal, user);
+        }
+        return false;
+    }
 
+    /** 判断是否是所有者*/
+    public static boolean isOwner(String username) {
+        Authentication authentication = AuthenticationUtil.authentication();
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
+            User principal = AuthenticationUtil.getUser(authentication);
+            return isOwner(principal, username);
+        }
+        return false;
+    }
 
+    /** 判断是否是同一个人*/
+    private static boolean isOwner(User principal, User user) {
+        return principal != null && user.getUsername().equals(principal.getUsername());
+    }
+
+    /** 判断是否是同一个人*/
+    private static boolean isOwner(User principal, String username) {
+        return principal != null && username.equals(principal.getUsername());
+    }
 
 }

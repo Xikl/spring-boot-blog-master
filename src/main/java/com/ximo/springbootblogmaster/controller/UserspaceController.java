@@ -223,6 +223,7 @@ public class UserspaceController {
         // 每次读取，简单的可以认为阅读量增加1次
         blogService.readingIncrease(id);
 
+        //todo 重构他
         // 判断操作用户是否是博客的所有者
         boolean isBlogOwner = false;
         Authentication authentication = AuthenticationUtil.authentication();

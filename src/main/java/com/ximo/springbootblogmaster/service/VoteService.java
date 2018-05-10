@@ -11,16 +11,15 @@ public interface VoteService {
     /**
      * 根据id获取 Vote
      *
-     * @param id
-     * @return
+     * @param id 点赞id
+     * @return 获得vote
      */
     Vote getVoteById(Long id);
 
     /**
      * 删除Vote
      *
-     * @param id
-     * @return
+     * @param id 点赞id
      */
     void removeVote(Long id);
 }
