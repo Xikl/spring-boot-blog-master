@@ -1,7 +1,9 @@
 package com.ximo.springbootblogmaster.domain.es;
 
 import com.ximo.springbootblogmaster.domain.Blog;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -20,10 +22,11 @@ import java.sql.Timestamp;
 @Document(indexName = "blog", type = "blog")
 @XmlRootElement
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EsBlog implements Serializable {
- 
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = -8270068440095839719L;
 
 	/** 主键id*/
 	@Id
@@ -32,37 +35,32 @@ public class EsBlog implements Serializable {
 	/** 博客id*/
 	@Field(index = false)
 	private Long blogId;
- 
+	/** 标题*/
 	private String title;
- 
+	/** 摘要 */
 	private String summary;
- 
+ 	/** 内容 */
 	private String content;
- 
+ 	/** 姓名 */
 	@Field(index = false)
 	private String username;
+	/** 图片 */
 	@Field(index = false)
 	private String avatar;
+	/** 创建时间 */
 	@Field(index = false)
 	private Timestamp createTime;
-
 	/** 访问量、阅读量*/
 	@Field(index = false)
 	private Integer readSize = 0;
 	/** 评论量*/
 	@Field(index = false)
 	private Integer commentSize = 0;
-
 	/** 点赞量 */
 	@Field(index = false)
 	private Integer voteSize = 0;
-
 	/** 标签*/
 	private String tags;
-
-	/** JPA 的规范要求无参构造函数；设为 protected 防止直接使用  */
-	protected EsBlog() {
-	}
 
 	public EsBlog(String title, String content) {
 		this.title = title;

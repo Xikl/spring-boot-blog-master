@@ -1,7 +1,9 @@
 package com.ximo.springbootblogmaster.domain;
 
 import com.github.rjeschke.txtmark.Processor;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -20,6 +22,8 @@ import java.util.List;
 @Entity
 @Data
 @Document(indexName = "blog", type = "blog")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Blog implements Serializable {
 
     private static final long serialVersionUID = 4756516151363843515L;
@@ -107,9 +111,6 @@ public class Blog implements Serializable {
     /** 标签 */
     @Column(name = "tags", length = 100)
     private String tags;
-
-    protected Blog() {
-    }
 
     public Blog(String title, String summary, String content) {
         this.title = title;

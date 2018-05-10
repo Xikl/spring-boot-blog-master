@@ -1,7 +1,8 @@
 package com.ximo.springbootblogmaster.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -12,19 +13,20 @@ import javax.persistence.*;
  * @description 权限控制器.
  */
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Authority implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1873448714012612535L;
 
 	/** 权限id */
 	@Id
-	@Getter @Setter
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/** 映射为字段，值不能为空 */
 	@Column(nullable = false)
-	@Setter
 	private String name;
 
 	/** 方法实现 接口*/

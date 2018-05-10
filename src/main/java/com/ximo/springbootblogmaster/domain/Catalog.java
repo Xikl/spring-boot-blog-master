@@ -1,6 +1,8 @@
 package com.ximo.springbootblogmaster.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +17,8 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Catalog implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -32,9 +36,6 @@ public class Catalog implements Serializable {
 	@JoinColumn(name="user_id")
 	private User user;
  
-	protected Catalog() {
-	}
-	
 	public Catalog(User user, String name) {
 		this.name = name;
 		this.user = user;

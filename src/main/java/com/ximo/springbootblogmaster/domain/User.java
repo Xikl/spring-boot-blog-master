@@ -1,6 +1,7 @@
 package com.ximo.springbootblogmaster.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Data
+@NoArgsConstructor
 public class User implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = -1564620897358354792L;
@@ -64,10 +66,6 @@ public class User implements UserDetails, Serializable {
 	@JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 		inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private List<Authority> authorities;
-
-	/** JPA 的规范要求无参构造函数；设为 protected 防止直接使用*/
-	protected User() {
-	}
 
 	public User(String name, String email,String username,String password) {
 		this.name = name;

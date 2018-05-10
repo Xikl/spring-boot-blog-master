@@ -1,5 +1,8 @@
 package com.ximo.springbootblogmaster.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -15,6 +18,9 @@ import java.sql.Timestamp;
  * @description 评论类.
  */
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comment implements Serializable {
 
 	private static final long serialVersionUID = 7078252576987822850L;
@@ -38,39 +44,10 @@ public class Comment implements Serializable {
 	@Column(nullable = false)
 	@CreationTimestamp
 	private Timestamp createTime;
- 
-	protected Comment() {
-	}
 
 	public Comment(User user, String content) {
 		this.content = content;
 		this.user = user;
 	}
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
- 
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
- 
 }
