@@ -36,5 +36,8 @@ public class Vote implements Serializable {
 	@Column(nullable = false)
 	@CreationTimestamp
 	private Timestamp createTime;
- 
+
+	public Vote(User user) {
+		this.user = user;
+	}
 }

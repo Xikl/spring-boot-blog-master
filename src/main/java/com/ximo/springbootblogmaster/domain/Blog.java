@@ -160,17 +160,20 @@ public class Blog implements Serializable {
      * 点赞
      *
      * @param vote 点赞
-     * @return
+     * @return 点赞
      */
     public boolean addVote(Vote vote) {
-        boolean isExist = false;
+//        boolean isExist = false;
         // 判断重复
-        for (Vote theVote : this.votes) {
-            if (theVote.getUser().getId().equals(vote.getUser().getId())) {
-                isExist = true;
-                break;
-            }
-        }
+//        for (Vote theVote : this.votes) {
+//            if (theVote.getUser().getId().equals(vote.getUser().getId())) {
+//                isExist = true;
+//                break;
+//            }
+//        }
+        //遍历博客一对多下所有的评论 比对该用户是否已经点过赞
+        boolean isExist = this.votes.stream()
+                .anyMatch(theVote -> theVote.getUser().getId().equals(vote.getUser().getId()));
 
         if (!isExist) {
             this.votes.add(vote);
