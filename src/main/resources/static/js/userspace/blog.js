@@ -1,9 +1,3 @@
-/*!
- * blog.html 页面脚本.
- * 
- * @since: 1.0.0 2017-03-26
- * @author Way Lau <https://waylau.com>
- */
 "use strict";
 //# sourceURL=blog.js
 
@@ -40,18 +34,19 @@ $(function() {
 	});
 	
 	// 获取评论列表
-	function getCommnet(blogId) {
-		// 获取 CSRF Token 
-		var csrfToken = $("meta[name='_csrf']").attr("content");
-		var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+	function getComment(blogId) {
+		// 获取 CSRF Token
+		//get的时候 不需要csrf 头部
+		// var csrfToken = $("meta[name='_csrf']").attr("content");
+		// var csrfHeader = $("meta[name='_csrf_header']").attr("content");
 		
 		$.ajax({ 
 			 url: '/comments', 
 			 type: 'GET', 
 			 data:{"blogId":blogId},
-			 beforeSend: function(request) {
-	             request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token 
-	         },
+             // beforeSend: function(request) {
+	         //     request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+	         // },
 			 success: function(data){
 				$("#mainContainer").html(data);
 	
@@ -80,7 +75,7 @@ $(function() {
 					 // 清空评论框
 					 $('#commentContent').val('');
 					 // 获取评论列表
-					 getCommnet(blogId);
+					 getComment(blogId);
 				 } else {
 					 toastr.error(data.message);
 				 }
@@ -106,7 +101,7 @@ $(function() {
 			 success: function(data){
 				 if (data.success) {
 					 // 获取评论列表
-					 getCommnet(blogId);
+					 getComment(blogId);
 				 } else {
 					 toastr.error(data.message);
 				 }
@@ -174,6 +169,6 @@ $(function() {
 	});
 	
 	// 初始化 博客评论
-	getCommnet(blogId);
+	getComment(blogId);
 	
 });
