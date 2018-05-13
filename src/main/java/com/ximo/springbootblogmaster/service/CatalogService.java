@@ -34,6 +34,8 @@ public interface CatalogService {
 	
 	/**
 	 * 获取Catalog列表
+	 *
+	 * @param user 用户
 	 * @return
 	 */
 	List<Catalog> listCatalogs(User user);

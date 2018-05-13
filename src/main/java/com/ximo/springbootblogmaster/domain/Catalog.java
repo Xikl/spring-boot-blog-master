@@ -20,18 +20,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Catalog implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -7635361960575002413L;
 
 	/** 用户的唯一标识*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	/** 分类名称 */
 	@NotEmpty(message = "名称不能为空")
 	@Size(min=2, max=30)
 	@Column(nullable = false)
 	private String name;
- 
+
+	/** 和用户一一对应 */
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;

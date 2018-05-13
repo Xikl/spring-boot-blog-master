@@ -49,7 +49,7 @@ public class CatalogController {
         List<Catalog> catalogs = catalogService.listCatalogs(user);
 
         // 判断操作用户是否是分类的所有者
-        boolean isOwner = AuthenticationUtil.isOwner(user.getUsername());
+        boolean isOwner = AuthenticationUtil.isOwner(username);
 
         model.addAttribute("isCatalogsOwner", isOwner);
         model.addAttribute("catalogs", catalogs);
@@ -93,7 +93,7 @@ public class CatalogController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("authentication.name.equals(#username)")
-    public ResponseEntity<Response> delete(String username, @PathVariable("id") Long id) {
+    public ResponseEntity<Response> delete(@RequestParam("username") String username, @PathVariable("id") Long id) {
         try {
             catalogService.removeCatalog(id);
         } catch (ConstraintViolationException e) {
@@ -113,7 +113,7 @@ public class CatalogController {
      */
     @GetMapping("/edit")
     public String getCatalogEdit(Model model) {
-        Catalog catalog = new Catalog(null, null);
+        Catalog catalog = new Catalog();
         model.addAttribute("catalog", catalog);
         return "/userspace/catalogedit";
     }

@@ -2,10 +2,13 @@ package com.ximo.springbootblogmaster.service.impl;
 
 import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
+import com.ximo.springbootblogmaster.enums.ResultEnums;
+import com.ximo.springbootblogmaster.exception.BlogException;
 import com.ximo.springbootblogmaster.repository.CatalogRepository;
 import com.ximo.springbootblogmaster.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -24,7 +27,7 @@ public class CatalogServiceImpl implements CatalogService {
     public Catalog saveCatalog(Catalog catalog) {
         // 判断重复
         List<Catalog> list = catalogRepository.findByUserAndName(catalog.getUser(), catalog.getName());
-        if (list != null && list.size() > 0) {
+        if (!CollectionUtils.isEmpty(list)) {
             throw new IllegalArgumentException("该分类已经存在了");
         }
         return catalogRepository.save(catalog);
@@ -37,7 +40,7 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public Catalog getCatalogById(Long id) {
-        return catalogRepository.findById(id).orElse(null);
+        return catalogRepository.findById(id).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
     }
 
     @Override
