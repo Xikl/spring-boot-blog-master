@@ -327,13 +327,13 @@ public class UserspaceController {
         try {
             // 判断是修改还是新增
             if (blog.getId() != null) {
-                Blog orignalBlog = blogService.getBlogById(blog.getId());
-                orignalBlog.setTitle(blog.getTitle());
-                orignalBlog.setContent(blog.getContent());
-                orignalBlog.setSummary(blog.getSummary());
-                orignalBlog.setCatalog(blog.getCatalog());
-                orignalBlog.setTags(blog.getTags());
-                blogService.saveBlog(orignalBlog);
+                Blog originalBlog = blogService.getBlogById(blog.getId());
+                originalBlog.setTitle(blog.getTitle());
+                originalBlog.setContent(blog.getContent());
+                originalBlog.setSummary(blog.getSummary());
+                originalBlog.setCatalog(blog.getCatalog());
+                originalBlog.setTags(blog.getTags());
+                blogService.saveBlog(originalBlog);
             } else {
                 User user = (User) userDetailsService.loadUserByUsername(username);
                 blog.setUser(user);
