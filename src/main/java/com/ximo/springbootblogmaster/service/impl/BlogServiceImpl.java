@@ -34,6 +34,7 @@ public class BlogServiceImpl implements BlogService {
 
     /**
      * 保存
+     * 除了往mysql中储存 还需要往es中存储
      *
      * @param blog
      * @return
@@ -52,7 +53,7 @@ public class BlogServiceImpl implements BlogService {
             esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
             esBlog.update(returnBlog);
         }
-
+        //保存方法
         esBlogService.updateEsBlog(esBlog);
         return returnBlog;
     }

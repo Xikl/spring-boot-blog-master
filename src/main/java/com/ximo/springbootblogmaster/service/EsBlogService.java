@@ -56,7 +56,7 @@ public interface EsBlogService {
      * @param pageable
      * @return
      */
-    Page<EsBlog> listHotestEsBlogs(String keyword, Pageable pageable);
+    Page<EsBlog> listHottestEsBlogs(String keyword, Pageable pageable);
 
     /**
      * 博客列表，分页
@@ -80,7 +80,7 @@ public interface EsBlogService {
      * @param keyword
      * @return
      */
-    List<EsBlog> listTop5HotestEsBlogs();
+    List<EsBlog> listTop5HottestEsBlogs();
 
     /**
      * 最热前 30 标签

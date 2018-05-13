@@ -28,3 +28,8 @@ otes.removeIf(vote -> vote.getId().equals(voteId));
 然后将其塞进一个xxxxToken类中如UsernamePasswordAuthenticationToken
 所以我们就可以在全局中拿到这个用户信息
 ```
+#### 5. spring data es 和 ElasticsearchTemplate的区别
+```
+
+
+```

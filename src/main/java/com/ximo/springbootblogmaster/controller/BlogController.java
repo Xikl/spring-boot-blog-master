@@ -32,6 +32,17 @@ public class BlogController {
     @Autowired
     private EsBlogService esBlogService;
 
+    /**
+     * 博客列表
+     *
+     * @param order
+     * @param keyword
+     * @param async
+     * @param pageIndex
+     * @param pageSize
+     * @param model
+     * @return
+     */
     @GetMapping
     public String listEsBlogs(
             @RequestParam(value = "order", required = false, defaultValue = "new") String order,
@@ -50,7 +61,7 @@ public class BlogController {
             if (HOT.equals(order)) {
                 Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
                 Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-                page = esBlogService.listHotestEsBlogs(keyword, pageable);
+                page = esBlogService.listHottestEsBlogs(keyword, pageable);
             } else if (NEW.equals(order)) {
                 // 最新查询
                 Sort sort = new Sort(Direction.DESC, "createTime");
@@ -76,7 +87,7 @@ public class BlogController {
         if (!async && !isEmpty) {
             List<EsBlog> newest = esBlogService.listTop5NewestEsBlogs();
             model.addAttribute("newest", newest);
-            List<EsBlog> hotest = esBlogService.listTop5HotestEsBlogs();
+            List<EsBlog> hotest = esBlogService.listTop5HottestEsBlogs();
             model.addAttribute("hotest", hotest);
             List<TagVO> tags = esBlogService.listTop30Tags();
             model.addAttribute("tags", tags);
@@ -96,7 +107,7 @@ public class BlogController {
 
     @GetMapping("/hotest")
     public String listHottestEsBlogs(Model model) {
-        List<EsBlog> hottest = esBlogService.listTop5HotestEsBlogs();
+        List<EsBlog> hottest = esBlogService.listTop5HottestEsBlogs();
         model.addAttribute("hotest", hottest);
         return "hotest";
     }

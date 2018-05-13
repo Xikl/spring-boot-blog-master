@@ -31,7 +31,6 @@ public class EsBlog implements Serializable {
 	/** 主键id*/
 	@Id
 	private String id;
-
 	/** 博客id*/
 	@Field(index = false)
 	private Long blogId;
@@ -95,7 +94,12 @@ public class EsBlog implements Serializable {
 		this.voteSize = blog.getVoteSize();
 		this.tags = blog.getTags();
 	}
- 
+
+	/**
+	 * 将blog更新到esBlog中
+	 *
+	 * @param blog 博客实体类
+	 */
 	public void update(Blog blog){
 		this.blogId = blog.getId();
 		this.title = blog.getTitle();

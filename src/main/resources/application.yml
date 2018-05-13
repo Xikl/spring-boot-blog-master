@@ -13,3 +13,11 @@ spring:
     cache: false
     mode: HTML
     encoding: UTF-8
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:9300
+      # 超时时间
+      properties:
+        transport:
+          tcp:
+            connect_timeout: 120s
