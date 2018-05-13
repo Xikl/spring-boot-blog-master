@@ -49,7 +49,7 @@ public class CatalogController {
         List<Catalog> catalogs = catalogService.listCatalogs(user);
 
         // 判断操作用户是否是分类的所有者
-        boolean isOwner = AuthenticationUtil.isOwner(user);
+        boolean isOwner = AuthenticationUtil.isOwner(user.getUsername());
 
         model.addAttribute("isCatalogsOwner", isOwner);
         model.addAttribute("catalogs", catalogs);

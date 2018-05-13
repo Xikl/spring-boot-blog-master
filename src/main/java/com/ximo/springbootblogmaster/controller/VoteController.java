@@ -67,7 +67,7 @@ public class VoteController {
     public ResponseEntity<Response> delete(@PathVariable("id") Long id, Long blogId) {
         User user = voteService.getVoteById(id).getUser();
         // 判断操作用户是否是点赞的所有者
-        boolean isOwner = AuthenticationUtil.isOwner(user);
+        boolean isOwner = AuthenticationUtil.isOwner(user.getUsername());
         if (!isOwner) {
             return ResponseEntity.ok().body(new Response(false, "没有操作权限"));
         }
