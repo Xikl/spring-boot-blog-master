@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -105,4 +106,18 @@ public class BlogTest {
         System.out.println(copyOnWriteArrayList);
     }
 
+    @Test
+    public void testTrueOrFalse() {
+        Integer a = 3;
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        Integer temp = null;
+        for (Integer i : list) {
+            boolean isEqual = a.equals(i);
+            if (isEqual) {
+                temp = 123;
+                break;
+            }
+        }
+        System.out.println(temp);
+    }
 }

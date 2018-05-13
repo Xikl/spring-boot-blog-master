@@ -241,9 +241,11 @@ public class UserspaceController {
 
         if (principal != null) {
             for (Vote vote : votes) {
-                vote.getUser().getUsername().equals(principal.getUsername());
-                currentVote = vote;
-                break;
+                boolean isVoted = vote.getUser().getUsername().equals(principal.getUsername());
+                if (isVoted) {
+                    currentVote = vote;
+                    break;
+                }
             }
         }
 
