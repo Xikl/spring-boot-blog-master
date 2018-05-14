@@ -21,3 +21,4 @@ spring:
         transport:
           tcp:
             connect_timeout: 120s
+      cluster-name: blog
