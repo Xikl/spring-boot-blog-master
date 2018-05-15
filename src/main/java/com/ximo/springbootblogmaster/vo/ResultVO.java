@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * @author 朱文赵
  * @date 2018/4/6
- * @description 同意返回对象
+ * @description 统一返回对象
  */
 @Data
 public class ResultVO<T> {
@@ -36,7 +36,8 @@ public class ResultVO<T> {
     }
 
     /** 私有构造*/
-    private ResultVO(ResultEnums enums, T data) {
+    private ResultVO(Boolean success, ResultEnums enums, T data) {
+        this.success = success;
         this.code = enums.getCode();
         this.msg = enums.getMsg();
         this.data = data;
@@ -44,12 +45,12 @@ public class ResultVO<T> {
 
     /** 成功方法 默认返回信息-成功 指定返回数据*/
     public static <T> ResultVO<T> success(T data) {
-        return new ResultVO<>(ResultEnums.SUCCESS, data);
+        return new ResultVO<>(true, ResultEnums.SUCCESS, data);
     }
 
     /** 成功方法 无返回数据*/
     public static <T> ResultVO<T> success() {
-        return new ResultVO<>(ResultEnums.SUCCESS, null);
+        return new ResultVO<>(true, ResultEnums.SUCCESS, null);
     }
 
     /** 成功方法 指定返回信息 和 返回数据*/
