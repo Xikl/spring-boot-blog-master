@@ -1,5 +1,6 @@
 package com.ximo.springbootblogmaster.controller;
 
+import com.ximo.springbootblogmaster.config.FileServerUrlConfig;
 import com.ximo.springbootblogmaster.domain.Blog;
 import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
@@ -58,6 +59,9 @@ public class UserspaceController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private FileServerUrlConfig fileServerUrlConfig;
+
     /**
      * 跳转页面
      *
@@ -85,6 +89,7 @@ public class UserspaceController {
     public ModelAndView profile(@PathVariable("username") String username, Model model) {
         User user = (User) userDetailsService.loadUserByUsername(username);
         model.addAttribute("user", user);
+        model.addAttribute("fileServerUrl", fileServerUrlConfig.getUrl());
         return new ModelAndView("/userspace/profile", "userModel", model);
     }
 

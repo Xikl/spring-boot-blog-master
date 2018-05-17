@@ -9,6 +9,8 @@ spring:
     # 打印sql语句
     show-sql: true
     open-in-view: false
+    hibernate:
+      ddl-auto: update
   thymeleaf:
     cache: false
     mode: HTML
@@ -22,3 +24,7 @@ spring:
           tcp:
             connect_timeout: 120s
       cluster-name: blog
+# 文件服务器地址
+file:
+  server:
+    url: http://localhost:8081/file/upload
