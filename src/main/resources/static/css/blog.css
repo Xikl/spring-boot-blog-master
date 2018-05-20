@@ -1,11 +1,11 @@
-/*!
- * Blog main style.
- *
- * @since: 1.0.0
- * @author Way Lau <https://waylau.com>
- */
+/* 设置字体 */
+body{
+    font-family:"Microsoft Yahei",微软雅黑,"Helvetica Neue",Arial,sans-serif;
+}
+
 /* Footer */
 .blog-footer {
+    position: absolute; /* 底部置底*/
     bottom: 0;
     width: 100%;
     height: 60px;
