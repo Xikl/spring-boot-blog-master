@@ -39,7 +39,7 @@ public class BlogServiceImpl implements BlogService {
      * @param blog
      * @return
      */
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public Blog saveBlog(Blog blog) {
         boolean isNew = (blog.getId() == null);

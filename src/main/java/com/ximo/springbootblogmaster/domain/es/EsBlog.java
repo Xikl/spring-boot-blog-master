@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -58,7 +57,7 @@ public class EsBlog implements Serializable {
 	/** 点赞量 */
 	@Field(index = false)
 	private Integer voteSize = 0;
-	/** 标签*/
+	/** 标签 允许室友fieldData */
 	private String tags;
 
 	public EsBlog(String title, String content) {

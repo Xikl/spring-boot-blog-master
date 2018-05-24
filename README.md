@@ -30,6 +30,45 @@ otes.removeIf(vote -> vote.getId().equals(voteId));
 ```
 #### 5. spring data es 和 ElasticsearchTemplate的区别
 ```
-
-
+todo
+```
+#### 6.前端底部导航置底
+```css
+/* Footer */
+.blog-footer {
+    position: fixed; /* 底部置底*/
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+}
+```
+#### 7.controller中重定向的问题
+- 当使用原生 "redirect:/u/" + username + "/blogs" 时，username
+为中文的时候回乱码。
+- 解决办法是采用一个RedirectAttributes类来进行填参操作
+```
+@GetMapping("/{username}")
+public String userSpace(@PathVariable("username") String username, Model model, RedirectAttributes redirectAttrs) {
+    User user = (User) userDetailsService.loadUserByUsername(username);
+    model.addAttribute("user", user);
+    redirectAttrs.addAttribute("username", username);
+    return "redirect:/u/{username}/blogs";
+}
+```
+#### 8.Elasticsearch 5.x 中fielddata 默认为false的问题
+- 5.x中Text field使用fielddata的这种内存数据结构。它会在内存中存储反转整
+个索引的每个片段，包括文档关系。因为它非常耗费内存所以默认是关闭的disabled，
+一般不必要设置的不要设置。 
+- 打开方法：
+```
+PUT my_index/_mapping/_doc
+{
+  "properties": {
+    "my_field": { 
+      "type":     "text",
+      "fielddata": true
+    }
+  }
+}
 ```

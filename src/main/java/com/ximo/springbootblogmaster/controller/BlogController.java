@@ -53,22 +53,17 @@ public class BlogController {
             Model model) {
 
         Page<EsBlog> page = null;
-        List<EsBlog> list = null;
+        List<EsBlog> list;
         // 系统初始化时，没有博客数据
         boolean isEmpty = true;
         try {
             // 最热查询
             if (HOT.equals(order)) {
-                Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
-                Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-                page = esBlogService.listHottestEsBlogs(keyword, pageable);
+                page = esBlogService.listHottestEsBlogs(keyword, pageIndex, pageSize);
             } else if (NEW.equals(order)) {
                 // 最新查询
-                Sort sort = new Sort(Direction.DESC, "createTime");
-                Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-                page = esBlogService.listNewestEsBlogs(keyword, pageable);
+                page = esBlogService.listNewestEsBlogs(keyword, pageIndex, pageSize);
             }
-
             isEmpty = false;
         } catch (Exception e) {
             Pageable pageable = PageRequest.of(pageIndex, pageSize);

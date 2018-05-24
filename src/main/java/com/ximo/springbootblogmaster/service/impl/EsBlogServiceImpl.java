@@ -47,8 +47,12 @@ public class EsBlogServiceImpl implements EsBlogService {
     @Autowired
     private UserService userService;
 
-    /** 最热*/
-    private static final Pageable TOP_5_PAGEABLE = PageRequest.of(0, 5);
+    /**
+     * 最热
+     */
+//    private static final Pageable TOP_5_PAGEABLE = PageRequest.of(0, 5);
+    private static final Integer DEFAULT_PAGE_INDEX = 1;
+    private static final Integer DEFAULT_PAGE_SIZE = 5;
     /** 空关键字 */
     private static final String EMPTY_KEYWORD = "";
 
@@ -78,35 +82,24 @@ public class EsBlogServiceImpl implements EsBlogService {
         return esBlogRepository.findByBlogId(blogId);
     }
 
-    /**
-     * @param keyword
-     * @param pageable
-     * @return
-     * @throws SearchParseException
-     */
     @Override
-    public Page<EsBlog> listNewestEsBlogs(String keyword, Pageable pageable) throws SearchParseException {
+    public Page<EsBlog> listNewestEsBlogs(String keyword, Integer pageIndex, Integer pageSize) throws SearchParseException {
         Sort sort = new Sort(Direction.DESC, "createTime");
-        if (pageable.getSort() == null) {
-            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        }
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
         return esBlogRepository.findDistinctEsBlogByTitleContainingOrSummaryContainingOrContentContainingOrTagsContaining(keyword, keyword, keyword, keyword, pageable);
     }
 
     /**
      * @param keyword
-     * @param pageable
+     * @param pageIndex
+     * @param pageSize
      * @return
      * @throws SearchParseException
      */
     @Override
-    public Page<EsBlog> listHottestEsBlogs(String keyword, Pageable pageable) throws SearchParseException {
-
+    public Page<EsBlog> listHottestEsBlogs(String keyword, Integer pageIndex, Integer pageSize) throws SearchParseException {
         Sort sort = new Sort(Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
-        if (pageable.getSort() == null) {
-            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        }
-
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
         return esBlogRepository.findDistinctEsBlogByTitleContainingOrSummaryContainingOrContentContainingOrTagsContaining(keyword, keyword, keyword, keyword, pageable);
     }
 
@@ -124,8 +117,7 @@ public class EsBlogServiceImpl implements EsBlogService {
      */
     @Override
     public List<EsBlog> listTop5NewestEsBlogs() {
-        Page<EsBlog> page = this.listHottestEsBlogs(EMPTY_KEYWORD, TOP_5_PAGEABLE);
-        return page.getContent();
+        return this.listHottestEsBlogs(EMPTY_KEYWORD, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE).getContent();
     }
 
     /**
@@ -136,8 +128,7 @@ public class EsBlogServiceImpl implements EsBlogService {
      */
     @Override
     public List<EsBlog> listTop5HottestEsBlogs() {
-        Page<EsBlog> page = this.listHottestEsBlogs(EMPTY_KEYWORD, TOP_5_PAGEABLE);
-        return page.getContent();
+        return this.listHottestEsBlogs(EMPTY_KEYWORD, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE).getContent();
     }
 
     @Override

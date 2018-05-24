@@ -43,20 +43,22 @@ public interface EsBlogService {
     /**
      * 最新博客列表，分页
      *
-     * @param keyword
-     * @param pageable
-     * @return
+     * @param keyword 关键字
+     * @param pageIndex 当前页
+     * @param pageSize 一页多少条
+     * @return 最新的博客列表
      */
-    Page<EsBlog> listNewestEsBlogs(String keyword, Pageable pageable);
+    Page<EsBlog> listNewestEsBlogs(String keyword, Integer pageIndex, Integer pageSize);
 
     /**
      * 最热博客列表，分页
      *
      * @param keyword
-     * @param pageable
+     * @param pageIndex
+     * @param pageSize
      * @return
      */
-    Page<EsBlog> listHottestEsBlogs(String keyword, Pageable pageable);
+    Page<EsBlog> listHottestEsBlogs(String keyword, Integer pageIndex, Integer pageSize);
 
     /**
      * 博客列表，分页
@@ -69,7 +71,6 @@ public interface EsBlogService {
     /**
      * 最新前5
      *
-     * @param keyword
      * @return
      */
     List<EsBlog> listTop5NewestEsBlogs();
@@ -77,7 +78,6 @@ public interface EsBlogService {
     /**
      * 最热前5
      *
-     * @param keyword
      * @return
      */
     List<EsBlog> listTop5HottestEsBlogs();
