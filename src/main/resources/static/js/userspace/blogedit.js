@@ -2,7 +2,7 @@
  * blogedit.html 页面脚本.
  * 
  * @since: 1.0.0 2017-03-26
- * @author Way Lau <https://waylau.com>
+ * @author 朱文赵
  */
 "use strict";
 //# sourceURL=blogedit.js

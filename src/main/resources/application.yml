@@ -9,8 +9,8 @@ spring:
     # 打印sql语句
     show-sql: true
     open-in-view: false
-    hibernate:
-      ddl-auto: update
+#    hibernate:
+#      ddl-auto: update
   thymeleaf:
     cache: false
     mode: HTML
@@ -24,6 +24,14 @@ spring:
           tcp:
             connect_timeout: 120s
       cluster-name: blog
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+server:
+  tomcat:
+    uri-encoding: UTF-8
 # 文件服务器地址
 file:
   server:

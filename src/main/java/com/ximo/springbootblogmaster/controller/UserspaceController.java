@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -70,10 +71,11 @@ public class UserspaceController {
      * @return 用户名
      */
     @GetMapping("/{username}")
-    public String userSpace(@PathVariable("username") String username, Model model) {
+    public String userSpace(@PathVariable("username") String username, Model model, RedirectAttributes redirectAttrs) {
         User user = (User) userDetailsService.loadUserByUsername(username);
         model.addAttribute("user", user);
-        return "redirect:/u/" + username + "/blogs";
+        redirectAttrs.addAttribute("username", username);
+        return "redirect:/u/{username}/blogs";
     }
 
     /**
