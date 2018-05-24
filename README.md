@@ -73,10 +73,10 @@ PUT my_index/_mapping/_doc
 }
 ```
 #### 9.spring data jpa 中懒加载的问题
-- 问题分析
+##### 9.1问题分析
  + 基于对Hibernate和JPA的理解，在ORM中，其为了提升性能使用了Lazy加载，就是在使用的时候，
  才会加载额外的数据，故导致了在使用之时再加载数据之时， session失效的问题出现。所以问题的目标点实现提前加载数据。
-- 解决办法
+##### 9.2解决办法
  + 尝试1：  在Service方法中新增了@Transactional进行事务添加
    结果1：  无效
  + 尝试2： 在@OneToMany的方法上，使用@Lazy(false)
