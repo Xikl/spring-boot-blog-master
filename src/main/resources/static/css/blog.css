@@ -1,11 +1,15 @@
 /* 设置字体 */
 body{
     font-family:"Microsoft Yahei",微软雅黑,"Helvetica Neue",Arial,sans-serif;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
 }
 
 /* Footer */
 .blog-footer {
-    position: absolute; /* 底部置底*/
+    position: fixed; /* 底部置底*/
     bottom: 0;
     width: 100%;
     height: 60px;
@@ -16,6 +20,7 @@ body{
 .blog-content-container {
     margin-top: 2.0em;
     background-color: #fff;
+    padding-bottom: 60px;
 }
 
 /* Index sidebar */
