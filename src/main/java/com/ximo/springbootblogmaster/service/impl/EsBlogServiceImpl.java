@@ -157,6 +157,7 @@ public class EsBlogServiceImpl implements EsBlogService {
                 .withQuery(matchAllQuery())
                 .withSearchType(SearchType.QUERY_THEN_FETCH)
                 .withIndices("blog").withTypes("blog")
+                //聚和查询 terms 指定查询的名字 可以随便起 相当于 groupBy 分组 查询
                 .addAggregation(terms("users").field("username").order(Terms.Order.count(false)).size(12))
                 .build();
         // when
