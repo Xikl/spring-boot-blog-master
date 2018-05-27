@@ -59,8 +59,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()   //基于 Form 表单登录验证
                 .loginPage("/login").failureUrl("/login-error") // 自定义登录界面
-                .and().rememberMe().key(KEY) // 启用 remember me
-                .and().exceptionHandling().accessDeniedPage("/403");  // 处理异常，拒绝访问就重定向到 403 页面
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login")//指定注销后重定向的页面
+                .and().rememberMe().key(KEY) // 启用 remember me、
+                .and().exceptionHandling()
+                .accessDeniedPage("/403");  // 处理异常，拒绝访问就重定向到 403 页面
 
         http.csrf().ignoringAntMatchers("/h2-console/**"); // 禁用 H2 控制台的 CSRF 防护
         http.headers().frameOptions().sameOrigin(); // 允许来自同一来源的H2 控制台的请求

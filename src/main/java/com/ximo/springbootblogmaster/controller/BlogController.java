@@ -47,6 +47,7 @@ public class BlogController {
     public String listEsBlogs(
             @RequestParam(value = "order", required = false, defaultValue = "new") String order,
             @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "recommend", required = false, defaultValue = "") String recommend,
             @RequestParam(value = "async", required = false) boolean async,
             @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,

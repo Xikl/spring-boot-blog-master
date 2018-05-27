@@ -72,6 +72,7 @@ PUT my_index/_mapping/_doc
   }
 }
 ```
+- 除了这种方法，还可以加上spring data elasticsearch的注解@Field(fielddata=true)
 #### 9.spring data jpa 中懒加载的问题
 ##### 9.1问题分析
  + 基于对Hibernate和JPA的理解，在ORM中，其为了提升性能使用了Lazy加载，就是在使用的时候，
@@ -97,3 +98,9 @@ spring:
   jpa:
     open-in-view: true
 ```
+##### 10.elasticsearch中注解@Field的使用
+- fieldType
+ + 5.x中没有string类型，只能用text 和 keyword 来来表示文本
+ + 如果fieldType中有一个设为auto类型，那么其他指定了的都会失效
+ + fielddata=true 只能设置到text类型
+ 
