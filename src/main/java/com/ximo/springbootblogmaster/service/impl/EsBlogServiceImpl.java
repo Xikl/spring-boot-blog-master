@@ -7,6 +7,7 @@ import com.ximo.springbootblogmaster.repository.es.EsBlogRepository;
 import com.ximo.springbootblogmaster.service.EsBlogService;
 import com.ximo.springbootblogmaster.service.UserService;
 import com.ximo.springbootblogmaster.vo.TagVO;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.search.SearchParseException;
@@ -36,6 +37,7 @@ import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
  * @description esBlog服务.
  */
 @Service
+@Slf4j
 public class EsBlogServiceImpl implements EsBlogService {
 
     @Autowired
@@ -47,17 +49,17 @@ public class EsBlogServiceImpl implements EsBlogService {
     @Autowired
     private UserService userService;
 
-    /**
-     * 最热
-     */
-//    private static final Pageable TOP_5_PAGEABLE = PageRequest.of(0, 5);
-    private static final Integer DEFAULT_PAGE_INDEX = 1;
+    /** 默认第一页 */
+    private static final Integer DEFAULT_PAGE_INDEX = 0;
+    /** 默认第二页 */
     private static final Integer DEFAULT_PAGE_SIZE = 5;
     /** 空关键字 */
     private static final String EMPTY_KEYWORD = "";
 
     /**
-     * @param id
+     * 删博客
+     *
+     * @param id 博客id
      */
     @Override
     public void removeEsBlog(String id) {
@@ -65,8 +67,10 @@ public class EsBlogServiceImpl implements EsBlogService {
     }
 
     /**
-     * @param esBlog
-     * @return
+     * 更新和保存blog
+     *
+     * @param esBlog 博客
+     * @return 博客
      */
     @Override
     public EsBlog updateEsBlog(EsBlog esBlog) {

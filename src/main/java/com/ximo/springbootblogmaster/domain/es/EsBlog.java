@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -19,7 +19,6 @@ import java.sql.Timestamp;
  * @description es博客.  MediaType 转为 XML
  */
 @Document(indexName = "blog", type = "blog")
-@XmlRootElement
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,35 +28,40 @@ public class EsBlog implements Serializable {
 
 	/** 主键id*/
 	@Id
+	@Field(type = FieldType.keyword)
 	private String id;
 	/** 博客id*/
-	@Field(index = false)
+	@Field(type = FieldType.Long)
 	private Long blogId;
 	/** 标题*/
+	@Field(type = FieldType.text)
 	private String title;
 	/** 摘要 */
+	@Field(type = FieldType.text)
 	private String summary;
  	/** 内容 */
+	@Field(type = FieldType.text)
 	private String content;
- 	/** 姓名 */
-	@Field(index = false)
+ 	/** 姓名 keyword 支持聚和 不支持分词 */
+ 	@Field(type = FieldType.keyword)
 	private String username;
 	/** 图片 */
-	@Field(index = false)
+	@Field(index = false, type = FieldType.text)
 	private String avatar;
 	/** 创建时间 */
-	@Field(index = false)
+	@Field(index = false, type = FieldType.Date)
 	private Timestamp createTime;
 	/** 访问量、阅读量*/
-	@Field(index = false)
+	@Field(index = false, type = FieldType.Integer)
 	private Integer readSize = 0;
 	/** 评论量*/
-	@Field(index = false)
+	@Field(index = false, type = FieldType.Integer)
 	private Integer commentSize = 0;
 	/** 点赞量 */
-	@Field(index = false)
+	@Field(index = false, type = FieldType.Integer)
 	private Integer voteSize = 0;
-	/** 标签 允许室友fieldData */
+	/** 标签 允许室友fieldData 类型为text 允许分词 不支持聚和*/
+	@Field(searchAnalyzer = "ik_smart", analyzer = "ik_smart", fielddata = true, type = FieldType.text)
 	private String tags;
 
 	public EsBlog(String title, String content) {

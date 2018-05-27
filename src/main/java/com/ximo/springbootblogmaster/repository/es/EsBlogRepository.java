@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
+import java.util.List;
+
 /**
  * @author 朱文赵
  * @date 2018/4/8
@@ -22,6 +24,14 @@ public interface EsBlogRepository extends ElasticsearchRepository<EsBlog, String
 	 * @return
 	 */
 	Page<EsBlog> findDistinctEsBlogByTitleContainingOrSummaryContainingOrContentContainingOrTagsContaining(String title, String Summary, String content, String tags, Pageable pageable);
-	
+
+	/**
+	 * 通过博客id查找es
+	 *
+	 * @param blogId 博客id
+	 * @return esBlog
+	 */
 	EsBlog findByBlogId(Long blogId);
+
+	List<EsBlog> findTop12ByUsername(String username);
 }
