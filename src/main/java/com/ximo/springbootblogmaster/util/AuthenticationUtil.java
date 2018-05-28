@@ -4,6 +4,8 @@ import com.ximo.springbootblogmaster.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Optional;
+
 import static com.ximo.springbootblogmaster.constant.CommonConstant.ANONYMOUS_USER;
 
 /**
@@ -33,6 +35,19 @@ public class AuthenticationUtil {
      */
     public static User getUser() {
         return (User) authentication().getPrincipal();
+    }
+
+    /**
+     * 获得用户信息 可能为空
+     *
+     * @return 用户信息
+     */
+    public static Optional<User> getUserOrElse() {
+        Authentication authentication = AuthenticationUtil.authentication();
+        if (AuthenticationUtil.isAuthenticated(authentication)) {
+            return Optional.of(AuthenticationUtil.getUser(authentication));
+        }
+        return Optional.empty();
     }
 
 

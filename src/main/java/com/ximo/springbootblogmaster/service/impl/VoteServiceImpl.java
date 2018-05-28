@@ -1,5 +1,6 @@
 package com.ximo.springbootblogmaster.service.impl;
 
+import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.Vote;
 import com.ximo.springbootblogmaster.enums.ResultEnums;
 import com.ximo.springbootblogmaster.exception.BlogException;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * @author 朱文赵
@@ -43,4 +45,8 @@ public class VoteServiceImpl implements VoteService {
         return voteRepository.findById(id).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
     }
 
+    @Override
+    public List<Vote> findByUser(User user) {
+        return voteRepository.findByUser(user);
+    }
 }

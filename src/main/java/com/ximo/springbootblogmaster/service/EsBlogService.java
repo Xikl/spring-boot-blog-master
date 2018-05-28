@@ -60,6 +60,8 @@ public interface EsBlogService {
      */
     Page<EsBlog> listHottestEsBlogs(String keyword, Integer pageIndex, Integer pageSize);
 
+    Page<EsBlog> listRecommendEsBlogs(Integer pageIndex, Integer pageSize);
+
     /**
      * 博客列表，分页
      *

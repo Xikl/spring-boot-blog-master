@@ -1,11 +1,15 @@
 package com.ximo.springbootblogmaster.service.impl;
 
 
+import com.ximo.springbootblogmaster.domain.Catalog;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.es.EsBlog;
 import com.ximo.springbootblogmaster.repository.es.EsBlogRepository;
+import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.service.EsBlogService;
 import com.ximo.springbootblogmaster.service.UserService;
+import com.ximo.springbootblogmaster.service.VoteService;
+import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.TagVO;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
@@ -27,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.ximo.springbootblogmaster.constant.CommonConstant.*;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
@@ -49,12 +54,13 @@ public class EsBlogServiceImpl implements EsBlogService {
     @Autowired
     private UserService userService;
 
-    /** 默认第一页 */
-    private static final Integer DEFAULT_PAGE_INDEX = 0;
-    /** 默认第二页 */
-    private static final Integer DEFAULT_PAGE_SIZE = 5;
-    /** 空关键字 */
-    private static final String EMPTY_KEYWORD = "";
+    @Autowired
+    private CatalogService catalogService;
+
+    @Autowired
+    private VoteService voteService;
+
+
 
     /**
      * 删博客
@@ -108,6 +114,17 @@ public class EsBlogServiceImpl implements EsBlogService {
     }
 
     @Override
+    public Page<EsBlog> listRecommendEsBlogs(Integer pageIndex, Integer pageSize) {
+        AuthenticationUtil.getUserOrElse().ifPresent(user -> {
+            //拿到这个用户的分类
+            List<Catalog> catalogs = catalogService.listCatalogs(user);
+
+        });
+        //未登录我们直接显示最热的文章
+        return listHottestEsBlogs(BLANK_CHARACTER, pageIndex, pageSize);
+    }
+
+    @Override
     public Page<EsBlog> listEsBlogs(Pageable pageable) {
         return esBlogRepository.findAll(pageable);
     }
@@ -121,7 +138,7 @@ public class EsBlogServiceImpl implements EsBlogService {
      */
     @Override
     public List<EsBlog> listTop5NewestEsBlogs() {
-        return this.listHottestEsBlogs(EMPTY_KEYWORD, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE).getContent();
+        return listNewestEsBlogs(EMPTY_KEYWORD, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE).getContent();
     }
 
     /**
@@ -132,7 +149,7 @@ public class EsBlogServiceImpl implements EsBlogService {
      */
     @Override
     public List<EsBlog> listTop5HottestEsBlogs() {
-        return this.listHottestEsBlogs(EMPTY_KEYWORD, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE).getContent();
+        return listHottestEsBlogs(EMPTY_KEYWORD, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE).getContent();
     }
 
     @Override

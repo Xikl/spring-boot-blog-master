@@ -6,6 +6,10 @@ import com.ximo.springbootblogmaster.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
  * @author 朱文赵
@@ -59,4 +63,15 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
      */
     Page<Blog> findByCatalog(Catalog catalog, Pageable pageable);
 
+    /**
+     * 查询用户已经点赞和评论的blog
+     *
+     * @param userId 用户id
+     * @return
+     */
+    @Query(value = "SELECT a.* FROM blog a JOIN blog_comment b ON a.id = b.blog_id " +
+            "JOIN comment c ON b.comment_id = c.id join blog_vote d on a.id = d.blog_id " +
+            "JOIN vote e on d.vote_id = e.id and e.user_id = :userId",
+            nativeQuery = true)
+    List<Blog> listUserVotedAndCommentedBlog(@Param("userId") Long userId);
 }

@@ -16,8 +16,13 @@ public interface CommonConstant {
     /** 新的*/
     String NEW = "new";
 
+    /** 推荐 */
+    String RECOMMEND = "recommend";
+
     /** 分号*/
     String SEMICOLON = ";";
+
+    String BLANK_CHARACTER = "";
 
     /** 角色授权id */
     Long ROLE_USER_AUTHORITY_ID = 2L;
@@ -27,4 +32,13 @@ public interface CommonConstant {
 
     /** 匿名用户*/
     String ANONYMOUS_USER = "anonymousUser";
+
+    /** 默认第一页 */
+    Integer DEFAULT_PAGE_INDEX = 0;
+
+    /** 默认第二页 */
+    Integer DEFAULT_PAGE_SIZE = 5;
+
+    /** 空关键字 */
+    String EMPTY_KEYWORD = "";
 }

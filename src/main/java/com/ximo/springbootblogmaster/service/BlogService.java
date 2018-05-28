@@ -6,6 +6,8 @@ import com.ximo.springbootblogmaster.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * @author 朱文赵
  * @date 2018/4/8
@@ -106,4 +108,13 @@ public interface BlogService {
      * @return
      */
     void removeVote(Long blogId, Long voteId);
+
+    /**
+     * 获得用户已经点赞和以及评论过的的blog列表
+     *
+     * @param user 用户
+     * @return 用户已经点赞和以及评论过的的blog列表
+     */
+    List<Blog> listUserVotedAndCommentedBlog(User user);
+
 }

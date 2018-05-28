@@ -23,7 +23,7 @@ public class Catalog implements Serializable {
 
 	private static final long serialVersionUID = -7635361960575002413L;
 
-	/** 用户的唯一标识*/
+	/** 分类标识*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

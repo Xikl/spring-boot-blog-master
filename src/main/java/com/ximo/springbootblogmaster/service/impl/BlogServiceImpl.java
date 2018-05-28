@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -151,5 +152,13 @@ public class BlogServiceImpl implements BlogService {
         Blog originalBlog = blogRepository.findById(blogId).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
         originalBlog.removeVote(voteId);
         this.saveBlog(originalBlog);
+    }
+
+    @Override
+    public List<Blog> listUserVotedAndCommentedBlog(User user) {
+//        List<Blog> blogs = blogRepository.listUserVotedAndCommentedBlog(user.getId());
+//        blogs.stream()
+
+        return null;
     }
 }

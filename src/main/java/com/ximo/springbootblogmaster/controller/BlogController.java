@@ -1,24 +1,25 @@
 package com.ximo.springbootblogmaster.controller;
 
-import static com.ximo.springbootblogmaster.constant.CommonConstant.HOT;
-import static com.ximo.springbootblogmaster.constant.CommonConstant.NEW;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.es.EsBlog;
+import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.EsBlogService;
+import com.ximo.springbootblogmaster.vo.Response;
 import com.ximo.springbootblogmaster.vo.TagVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.ximo.springbootblogmaster.constant.CommonConstant.HOT;
+import static com.ximo.springbootblogmaster.constant.CommonConstant.NEW;
+import static com.ximo.springbootblogmaster.constant.CommonConstant.RECOMMEND;
 
 /**
  * @author 朱文赵
@@ -31,6 +32,9 @@ public class BlogController {
 
     @Autowired
     private EsBlogService esBlogService;
+
+    @Autowired
+    private BlogService blogService;
 
     /**
      * 博客列表
@@ -47,7 +51,6 @@ public class BlogController {
     public String listEsBlogs(
             @RequestParam(value = "order", required = false, defaultValue = "new") String order,
             @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-            @RequestParam(value = "recommend", required = false, defaultValue = "") String recommend,
             @RequestParam(value = "async", required = false) boolean async,
             @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
@@ -64,6 +67,8 @@ public class BlogController {
             } else if (NEW.equals(order)) {
                 // 最新查询
                 page = esBlogService.listNewestEsBlogs(keyword, pageIndex, pageSize);
+            } else if (RECOMMEND.equals(order)) {
+
             }
             isEmpty = false;
         } catch (Exception e) {
@@ -108,5 +113,14 @@ public class BlogController {
         return "hotest";
     }
 
-
+    /**
+     * 获得博客的点赞量
+     *
+     * @param blogId 博客id
+     * @return
+     */
+    @GetMapping("/blog/{blogId}/vote-size")
+    public ResponseEntity<Response> findBlogVoteSize(@PathVariable("blogId") Long blogId) {
+        return ResponseEntity.ok().body(Response.responseOne("voteSize", blogService.getBlogById(blogId).getVoteSize()));
+    }
 }

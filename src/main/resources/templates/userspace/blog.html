@@ -36,7 +36,7 @@
                            th:text="${blogModel.user.username}">ximo</a> 发表于 [[${#dates.format(blogModel.createTime,
                         'yyyy-MM-dd HH:mm')}]]
                         <i class="fa fa-eye" aria-hidden="true">[[${blogModel.readSize}]]</i>
-                        <i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
+                        <i id="vote-size" class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
                         <i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
                         <a href="/u/ximo" th:if="${isBlogOwner}"
                            th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"

@@ -1,6 +1,9 @@
 package com.ximo.springbootblogmaster.service;
 
+import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.Vote;
+
+import java.util.List;
 
 /**
  * @author 朱文赵
@@ -22,4 +25,12 @@ public interface VoteService {
      * @param id 点赞id
      */
     void removeVote(Long id);
+
+    /**
+     * 通过用户查找他的点赞列表
+     *
+     * @param user 用户
+     * @return 点赞列表
+     */
+    List<Vote> findByUser(User user);
 }

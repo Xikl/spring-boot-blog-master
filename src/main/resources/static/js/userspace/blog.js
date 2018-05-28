@@ -56,6 +56,22 @@ $(function() {
 		     }
 		 });
 	}
+
+	function getVoteSize() {
+        $.ajax({
+            url: '/blog/'.concat(blogId).concat('/vote-size'),
+            type: 'GET',
+            // beforeSend: function(request) {
+            //     request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            // },
+            success: function(data){
+                $("#vote-size").html(data.body.voteSize);
+            },
+            error : function() {
+                toastr.error("error!");
+            }
+        });
+    }
 	
 	// 提交评论
 	$(".blog-content-container").on("click","#submitComment", function () { 
