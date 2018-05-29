@@ -63,15 +63,22 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
      */
     Page<Blog> findByCatalog(Catalog catalog, Pageable pageable);
 
+    List<Object[]> listUserVotedAndCommentedBlog(@Param("userId") Long userId);
+
     /**
-     * 查询用户已经点赞和评论的blog
+     * 查找用户下的所有博客
      *
-     * @param userId 用户id
+     * @param user 用户
      * @return
      */
-    @Query(value = "SELECT a.* FROM blog a JOIN blog_comment b ON a.id = b.blog_id " +
-            "JOIN comment c ON b.comment_id = c.id join blog_vote d on a.id = d.blog_id " +
-            "JOIN vote e on d.vote_id = e.id and e.user_id = :userId",
-            nativeQuery = true)
-    List<Blog> listUserVotedAndCommentedBlog(@Param("userId") Long userId);
+    List<Blog> findByUser(User user);
+
+    /**
+     * 终于通过这种智障的方式搞定了查询部分字段 用hql的方式
+     * @param user
+     * @return
+     */
+    @Query(value = "select new Blog(t.id, t.title,t.tags) " +
+            "from Blog t where t.user = :user")
+    List<Blog> findByUserCustomer(@Param("user")User user);
 }

@@ -1,14 +1,14 @@
 package com.ximo.springbootblogmaster.service.impl;
 
 
-import com.ximo.springbootblogmaster.domain.Catalog;
+import com.ximo.springbootblogmaster.domain.Blog;
 import com.ximo.springbootblogmaster.domain.User;
 import com.ximo.springbootblogmaster.domain.es.EsBlog;
 import com.ximo.springbootblogmaster.repository.es.EsBlogRepository;
+import com.ximo.springbootblogmaster.service.BlogService;
 import com.ximo.springbootblogmaster.service.CatalogService;
 import com.ximo.springbootblogmaster.service.EsBlogService;
 import com.ximo.springbootblogmaster.service.UserService;
-import com.ximo.springbootblogmaster.service.VoteService;
 import com.ximo.springbootblogmaster.util.AuthenticationUtil;
 import com.ximo.springbootblogmaster.vo.TagVO;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ximo.springbootblogmaster.constant.CommonConstant.*;
 import static java.util.stream.Collectors.toList;
@@ -58,8 +59,7 @@ public class EsBlogServiceImpl implements EsBlogService {
     private CatalogService catalogService;
 
     @Autowired
-    private VoteService voteService;
-
+    private BlogService blogService;
 
 
     /**
@@ -115,11 +115,19 @@ public class EsBlogServiceImpl implements EsBlogService {
 
     @Override
     public Page<EsBlog> listRecommendEsBlogs(Integer pageIndex, Integer pageSize) {
-        AuthenticationUtil.getUserOrElse().ifPresent(user -> {
-            //拿到这个用户的分类
-            List<Catalog> catalogs = catalogService.listCatalogs(user);
+        Optional<User> userOrElse = AuthenticationUtil.getUserOrElse();
+        if (userOrElse.isPresent()) {
+            User user = userOrElse.get();
+            List<String> oneTags = blogService.listBlogsByUser(user)
+                    .stream().map(Blog::getTags).collect(toList());
 
-        });
+            List<String> twoTags = blogService.listUserVotedAndCommentedBlog(user.getId())
+                    .stream().map(Blog::getTags).collect(toList());
+            twoTags.removeAll(oneTags);
+            twoTags.addAll(oneTags);
+
+            esBlogRepository.findByTagsIn(twoTags, PageRequest.of(pageIndex, pageSize));
+        }
         //未登录我们直接显示最热的文章
         return listHottestEsBlogs(BLANK_CHARACTER, pageIndex, pageSize);
     }

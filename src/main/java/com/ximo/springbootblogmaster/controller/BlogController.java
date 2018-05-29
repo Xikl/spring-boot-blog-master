@@ -68,7 +68,7 @@ public class BlogController {
                 // 最新查询
                 page = esBlogService.listNewestEsBlogs(keyword, pageIndex, pageSize);
             } else if (RECOMMEND.equals(order)) {
-
+                esBlogService.listRecommendEsBlogs(pageIndex, pageSize);
             }
             isEmpty = false;
         } catch (Exception e) {
@@ -113,14 +113,4 @@ public class BlogController {
         return "hotest";
     }
 
-    /**
-     * 获得博客的点赞量
-     *
-     * @param blogId 博客id
-     * @return
-     */
-    @GetMapping("/blog/{blogId}/vote-size")
-    public ResponseEntity<Response> findBlogVoteSize(@PathVariable("blogId") Long blogId) {
-        return ResponseEntity.ok().body(Response.responseOne("voteSize", blogService.getBlogById(blogId).getVoteSize()));
-    }
 }

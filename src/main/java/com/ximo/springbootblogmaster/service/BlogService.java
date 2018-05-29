@@ -112,9 +112,16 @@ public interface BlogService {
     /**
      * 获得用户已经点赞和以及评论过的的blog列表
      *
-     * @param user 用户
+     * @param userId 用户id
      * @return 用户已经点赞和以及评论过的的blog列表
      */
-    List<Blog> listUserVotedAndCommentedBlog(User user);
+    List<Blog> listUserVotedAndCommentedBlog(Long userId);
 
+    /**
+     * 通过用户查询 该用户下的所有博客
+     *
+     * @param user 用户
+     * @return
+     */
+    List<Blog> listBlogsByUser(User user);
 }

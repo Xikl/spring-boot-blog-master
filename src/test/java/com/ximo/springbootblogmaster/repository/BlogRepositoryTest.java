@@ -1,6 +1,8 @@
 package com.ximo.springbootblogmaster.repository;
 
 import com.ximo.springbootblogmaster.domain.Blog;
+import com.ximo.springbootblogmaster.domain.User;
+import com.ximo.springbootblogmaster.dto.BlogDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * @author 朱文赵
@@ -26,7 +28,29 @@ public class BlogRepositoryTest {
 
     @Test
     public void listUserVotedAndCommentedBlog() {
-        List<Blog> blogs = blogRepository.listUserVotedAndCommentedBlog(2L);
-        System.out.println(blogs);
+        List<Object[]> blogs = blogRepository.listUserVotedAndCommentedBlog(2L);
+        System.out.println(blogs.toString());
+        for (Object[] object : blogs) {
+            System.out.println(object[0]);
+            System.out.println(object[1]);
+            System.out.println(object[2]);
+        }
+    }
+
+    @Test
+    public void testFindByUser() {
+        User user = new User();
+        user.setId(2L);
+        List<Blog> result = blogRepository.findByUser(user);
+        System.out.println(result);
+        assertNotEquals(0, result.size());
+    }
+
+    @Test
+    public void testFindByUserId() {
+        User user = new User();
+        user.setId(2L);
+        List<Blog> result = blogRepository.findByUserCustomer(user);
+        System.out.println(result);
     }
 }

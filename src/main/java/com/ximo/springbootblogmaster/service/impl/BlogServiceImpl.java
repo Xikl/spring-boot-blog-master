@@ -2,6 +2,7 @@ package com.ximo.springbootblogmaster.service.impl;
 
 import com.ximo.springbootblogmaster.domain.*;
 import com.ximo.springbootblogmaster.domain.es.EsBlog;
+import com.ximo.springbootblogmaster.dto.BlogDTO;
 import com.ximo.springbootblogmaster.enums.ResultEnums;
 import com.ximo.springbootblogmaster.exception.BlogException;
 import com.ximo.springbootblogmaster.repository.BlogRepository;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -109,9 +113,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void readingIncrease(Long id) {
         Blog blog = blogRepository.findById(id).orElseThrow(() -> new BlogException(ResultEnums.RESOURCE_NOT_FOUND));
-        //todo  加锁 改为原子变量
-        AtomicInteger integer = new AtomicInteger(blog.getCommentSize());
-        blog.setReadSize(integer.incrementAndGet());
+        AtomicInteger readSize = new AtomicInteger(blog.getReadSize());
+        blog.setReadSize(readSize.incrementAndGet());
         this.saveBlog(blog);
     }
 
@@ -155,10 +158,15 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<Blog> listUserVotedAndCommentedBlog(User user) {
-//        List<Blog> blogs = blogRepository.listUserVotedAndCommentedBlog(user.getId());
-//        blogs.stream()
+    public List<Blog> listUserVotedAndCommentedBlog(Long userId) {
+        List<Object[]> blogObject = blogRepository.listUserVotedAndCommentedBlog(userId);
+        return blogObject.stream()
+                .map(Blog::new)
+                .collect(toList());
+    }
 
-        return null;
+    @Override
+    public List<Blog> listBlogsByUser(User user) {
+        return blogRepository.findByUserCustomer(user);
     }
 }

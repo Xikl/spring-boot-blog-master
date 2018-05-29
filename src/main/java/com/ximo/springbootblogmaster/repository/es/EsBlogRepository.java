@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,4 +35,12 @@ public interface EsBlogRepository extends ElasticsearchRepository<EsBlog, String
 	EsBlog findByBlogId(Long blogId);
 
 	List<EsBlog> findTop12ByUsername(String username);
+
+	/**
+	 * 通过tags的来查找
+	 *
+	 * @param tags 标签
+	 * @return
+	 */
+	Page<EsBlog> findByTagsIn(Collection<String> tags, Pageable pageable);
 }

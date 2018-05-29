@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -24,6 +25,22 @@ import java.util.List;
 @Document(indexName = "blog", type = "blog")
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Blog.listUserVotedAndCommentedBlog",
+                query = "SELECT a.id, a.title, a.tags FROM blog a JOIN blog_comment b ON a.id = b.blog_id " +
+                        "JOIN comment c ON b.comment_id = c.id join blog_vote d on a.id = d.blog_id " +
+                        "JOIN vote e on d.vote_id = e.id and e.user_id = :userId",
+                resultSetMapping = "blogMap")
+})
+@SqlResultSetMappings({
+        @SqlResultSetMapping(name = "blogMap",
+                entities = {},
+                columns = {
+                        @ColumnResult(name = "id"),
+                        @ColumnResult(name="title"),
+                        @ColumnResult(name="tags")
+                })
+})
 public class Blog implements Serializable {
 
     private static final long serialVersionUID = 4756516151363843515L;
@@ -94,7 +111,7 @@ public class Blog implements Serializable {
     private Integer voteSize = 0;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "blog_comment", joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
     private List<Comment> comments;
@@ -117,6 +134,18 @@ public class Blog implements Serializable {
         this.title = title;
         this.summary = summary;
         this.content = content;
+    }
+
+    public Blog(Object[] objects) {
+        this.id = ((BigInteger)objects[0]).longValue();
+        this.title = (String) objects[1];
+        this.tags = (String) objects[2];
+    }
+
+    public Blog(Long id, String title, String tags) {
+        this.id = id;
+        this.title = title;
+        this.tags = tags;
     }
 
     public void setContent(String content) {
